@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ArrowLeft, Flame, ShieldAlert, ChevronDown, Terminal } from 'lucide-react';
 import heroRedPill from '../assets/Hero-RedPill.png';
@@ -12,41 +12,71 @@ interface HeroProps {
 export default function Hero({ theme, onThemeChange }: HeroProps) {
   const imageRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const [imageReady, setImageReady] = useState(false);
   const isRed = theme === 'red';
 
   const heroImage = isRed ? heroRedPill : heroBluePill;
 
+  // Pre-decode & ensure image is 100% ready before triggering cinematic reveal
   useEffect(() => {
+    setImageReady(false);
+    const img = new Image();
+    img.src = heroImage;
+    if (img.complete) {
+      setImageReady(true);
+    } else {
+      img.onload = () => setImageReady(true);
+      if (img.decode) {
+        img.decode().then(() => setImageReady(true)).catch(() => setImageReady(true));
+      }
+    }
+  }, [heroImage]);
+
+  // AURA Cinematic Reveal Sequence
+  useEffect(() => {
+    if (!imageReady) return;
     const tl = gsap.timeline();
 
     tl.fromTo(
       imageRef.current,
-      { scale: 1.1, opacity: 0, filter: 'blur(8px)' },
-      { scale: 1, opacity: 1, filter: 'blur(0px)', duration: 1.5, ease: 'power3.out' }
+      { scale: 1.15, opacity: 0, filter: 'blur(12px) brightness(0.5)' },
+      { scale: 1, opacity: 1, filter: 'blur(0px) brightness(0.95)', duration: 1.4, ease: 'power3.out' }
     );
 
     if (textRef.current) {
       tl.fromTo(
         textRef.current,
-        { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' },
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' },
         0.3
       );
     }
-  }, [theme]);
+  }, [imageReady, theme]);
 
   return (
-    <section id="hero" className="relative w-full h-screen overflow-hidden bg-black">
-      {/* Background Hero Image */}
+    <section id="hero" className="relative w-full h-screen overflow-hidden bg-[#030304]">
+      {/* Background Volumetric Atmosphere Beam */}
+      <div
+        className={`absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ${
+          isRed
+            ? 'bg-[radial-gradient(ellipse_at_center,_rgba(235,20,50,0.15)_0%,_rgba(3,3,4,0.95)_75%)]'
+            : 'bg-[radial-gradient(ellipse_at_center,_rgba(0,102,255,0.15)_0%,_rgba(3,3,4,0.95)_75%)]'
+        }`}
+      />
+
+      {/* Background Hero Image with Pre-Decode Protection */}
       <img
         ref={imageRef}
         src={heroImage}
+        onLoad={() => setImageReady(true)}
         alt={`Hero ${theme} pill`}
-        className="absolute inset-0 w-full h-full object-contain object-center z-0 filter brightness-[0.95] contrast-[1.05]"
+        className={`absolute inset-0 w-full h-full object-contain object-center z-10 transition-opacity duration-500 ${
+          imageReady ? 'opacity-100' : 'opacity-0'
+        }`}
       />
 
       {/* Top Header Controls */}
-      <header className="fixed top-4 sm:top-6 left-0 right-0 z-[100] px-4 sm:px-6 md:px-12 flex items-center justify-between gap-2 pointer-events-none">
+      <header className="absolute top-4 sm:top-6 left-0 right-0 z-[50] px-4 sm:px-6 md:px-12 flex items-center justify-between gap-2 pointer-events-none">
         {/* Left Control: Reselect */}
         <button
           onClick={() => onThemeChange('selection')}

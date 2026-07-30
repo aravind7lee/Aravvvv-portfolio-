@@ -182,7 +182,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           pin: pinRef.current,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 0.8,
+          scrub: 0.5,
         },
       });
 
@@ -261,9 +261,9 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
   return (
     <section
       ref={containerRef}
-      id="skills-mastery"
-      className="relative w-full bg-black z-[40] min-h-[400vh]"
-      style={{ height: '400vh' }}
+      id="skills-content"
+      className="relative w-full bg-black z-[40] min-h-[600vh]"
+      style={{ height: '600vh' }}
     >
       {/* PINNED VIEWPORT */}
       <div

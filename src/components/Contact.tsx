@@ -132,7 +132,7 @@ export default function Contact({ theme }: ContactProps) {
 
   return (
     <section
-      id="contact"
+      id="contact-content"
       className="relative w-full min-h-screen bg-black text-white pt-24 pb-16 px-6 md:px-12 lg:px-20 flex flex-col justify-between select-none border-t border-zinc-900 z-[40]"
     >
       <div className="w-full max-w-7xl mx-auto space-y-16 my-auto">

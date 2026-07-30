@@ -14,9 +14,11 @@ interface ScrollSideNavProps {
 const DEFAULT_SECTIONS: NavSection[] = [
   { id: 'hero', label: 'HERO', number: '01' },
   { id: 'about', label: 'ABOUT', number: '02' },
-  { id: 'skills-mastery', label: 'SKILLS', number: '03' },
-  { id: 'works', label: 'WORKS', number: '04' },
-  { id: 'contact', label: 'CONTACT', number: '05' },
+  { id: 'sections-pro', label: 'CINEMA', number: '03' },
+  { id: 'experience', label: 'EXP', number: '04' },
+  { id: 'skills-mastery', label: 'SKILLS', number: '05' },
+  { id: 'works', label: 'WORKS', number: '06' },
+  { id: 'contact', label: 'CONTACT', number: '07' },
 ];
 
 export default function ScrollSideNav({

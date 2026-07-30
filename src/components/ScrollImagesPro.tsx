@@ -12,7 +12,7 @@ export interface ScrollImageItem {
   heading: string;
   description: string;
   tags: string[];
-  image: string;
+  image?: string;
   link?: string;
 }
 
@@ -49,7 +49,7 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
         pin: pinEl,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 0.3,
+        scrub: 0.5,
         onUpdate: (self) => {
           const rawIdx = Math.floor(self.progress * items.length);
           const newIdx = Math.min(Math.max(rawIdx, 0), items.length - 1);
@@ -99,8 +99,8 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
   return (
     <div
       ref={containerRef}
-      className="relative w-full bg-black text-white select-none overflow-hidden min-h-[380vh]"
-      style={{ height: `${items.length * 70 + 30}vh` }}
+      className="relative w-full bg-black text-white select-none overflow-hidden min-h-[590vh]"
+      style={{ height: `${items.length * 80 + 30}vh` }}
     >
       {/* Pinned Viewport Frame */}
       <div
@@ -130,12 +130,16 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
 
         {/* Crisp Dark Background Wallpaper Layer */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
-          <img
-            ref={imageRef}
-            src={activeItem.image}
-            alt={activeItem.title}
-            className="w-full h-full object-cover object-center filter brightness-[0.35] contrast-[1.05]"
-          />
+          {activeItem.image ? (
+            <img
+              ref={imageRef}
+              src={activeItem.image}
+              alt={activeItem.title}
+              className="w-full h-full object-cover object-center filter brightness-[0.35] contrast-[1.05]"
+            />
+          ) : (
+            <div className="w-full h-full bg-zinc-950" />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/90" />
         </div>
 
@@ -209,11 +213,17 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
               className={`relative rounded-2xl overflow-hidden border p-2 bg-zinc-950 shadow-2xl transition-all duration-300 group ${primaryBorderColor}`}
             >
               <div className="relative aspect-[16/10] rounded-xl overflow-hidden bg-black">
-                <img
-                  src={activeItem.image}
-                  alt={activeItem.heading}
-                  className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                />
+                {activeItem.image ? (
+                  <img
+                    src={activeItem.image}
+                    alt={activeItem.heading}
+                    className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
+                    <span className="font-mono text-xs text-zinc-600 tracking-widest uppercase">SCREENSHOT COMING SOON</span>
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                   <span className="text-xs font-mono text-white flex items-center gap-1 font-bold">
                     VIEW DETAILS <ChevronRight className="w-3.5 h-3.5" />
@@ -268,11 +278,15 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
                     : 'border-white/15 opacity-40 hover:opacity-100 hover:border-white/40'
                 }`}
               >
-                <img
-                  src={it.image}
-                  alt={it.title}
-                  className="w-full h-full object-cover filter brightness-[0.7]"
-                />
+                {it.image ? (
+                  <img
+                    src={it.image}
+                    alt={it.title}
+                    className="w-full h-full object-cover filter brightness-[0.7]"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-zinc-900" />
+                )}
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center font-mono text-[10px] font-bold text-white">
                   0{idx + 1}
                 </div>

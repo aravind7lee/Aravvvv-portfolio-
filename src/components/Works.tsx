@@ -1,5 +1,7 @@
 import ScrollImagesPro, { type ScrollImageItem } from './ScrollImagesPro';
 
+import orbytCrmImg from '../assets/works/orbyt-crm.png';
+import leadsCrmImg from '../assets/works/leads-crm.png';
 import resuFlowImg from '../assets/works/ResuFlow.png';
 import grindXImg from '../assets/works/Grind-X.png';
 import genoraImg from '../assets/works/Genora.png';
@@ -12,9 +14,31 @@ interface WorksProps {
 
 const PROJECTS_DATA: ScrollImageItem[] = [
   {
+    id: 'orbyt-crm',
+    title: 'Orbyt CRM',
+    giantTitle: 'ONE',
+    heading: 'Full-Stack CRM Platform',
+    tags: ['MERN', 'Socket.IO', 'Gemini AI', 'Zustand', 'RBAC', 'JWT'],
+    description:
+      'Orbyt CRM is a secure full-stack CRM built on the MERN stack with Role-Based Access Control (RBAC) and JWT authentication. Features a drag-and-drop task management interface powered by Zustand for scalable state management, real-time notifications via Socket.IO, and Gemini AI integration for automated business insights and analytics.',
+    image: orbytCrmImg,
+    link: '#',
+  },
+  {
+    id: 'leads-crm',
+    title: 'Leads Management CRM',
+    giantTitle: 'TWO',
+    heading: 'Scalable Lead Dashboard',
+    tags: ['MERN', 'Socket.IO', 'Zustand', 'Google Sheets API', 'MongoDB', 'Cron'],
+    description:
+      'A scalable lead management CRM with RBAC for hierarchical employee and admin workflows. Built automated pipelines via Google Sheets API and cron jobs to sync and deduplicate leads in MongoDB. Delivers real-time analytics and live notifications across client sessions using Socket.IO.',
+    image: leadsCrmImg,
+    link: '#',
+  },
+  {
     id: 'resuflow',
     title: 'ResuFlow',
-    giantTitle: 'ONE',
+    giantTitle: 'THREE',
     heading: 'AI-Powered Resume Builder',
     tags: ['MERN', 'AI', 'Google Gemini', 'ImageKit', 'REST API', 'Responsive'],
     description:
@@ -24,7 +48,7 @@ const PROJECTS_DATA: ScrollImageItem[] = [
   {
     id: 'grind-x',
     title: 'GRIND-X',
-    giantTitle: 'TWO',
+    giantTitle: 'FOUR',
     heading: 'Full-Stack Fitness App (MERN)',
     tags: ['MongoDB', 'Express.js', 'React.js', 'Node.js', 'JWT', 'Cloudinary'],
     description:
@@ -34,7 +58,7 @@ const PROJECTS_DATA: ScrollImageItem[] = [
   {
     id: 'genora',
     title: 'Genora.ai',
-    giantTitle: 'THREE',
+    giantTitle: 'FIVE',
     heading: 'AI SaaS Platform (PERN)',
     tags: ['React', 'Node', 'Postgres', 'Clerk', 'Stripe', 'AI'],
     description:
@@ -44,7 +68,7 @@ const PROJECTS_DATA: ScrollImageItem[] = [
   {
     id: 'chattrix',
     title: 'Chattrix',
-    giantTitle: 'FOUR',
+    giantTitle: 'SIX',
     heading: 'Real-time Chat Engine',
     tags: ['Socket.IO', 'MERN', 'Realtime', 'Websockets'],
     description:
@@ -54,7 +78,7 @@ const PROJECTS_DATA: ScrollImageItem[] = [
   {
     id: 'cravezyy',
     title: 'Cravezyy',
-    giantTitle: 'FIVE',
+    giantTitle: 'SEVEN',
     heading: 'Food Delivery App (MERN)',
     tags: ['MERN', 'MongoDB', 'Express', 'React', 'Node', 'Socket'],
     description:
@@ -65,7 +89,7 @@ const PROJECTS_DATA: ScrollImageItem[] = [
 
 export default function Works({ theme }: WorksProps) {
   return (
-    <section id="works" className="relative w-full bg-black">
+    <section id="works-content" className="relative w-full bg-black">
       {/* Bi-Directional Pinned Scroll Gallery Component */}
       <ScrollImagesPro items={PROJECTS_DATA} theme={theme} />
     </section>
