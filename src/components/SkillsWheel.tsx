@@ -181,7 +181,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
         boxShadow: inactiveShadow,
         force3D: true,
       });
-      gsap.set('.wheel-icon-target:first-child', {
+      gsap.set('.node-wrapper:first-child .wheel-icon-target', {
         borderColor: activeBorder,
         backgroundColor: activeBg,
         color: '#ffffff',
@@ -259,7 +259,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
 
         // Dynamic Red / Blue Glowing Color Animation for Active Node Icon
         tl.to(
-          `.wheel-icon-target:nth-child(${i + 1})`,
+          `.node-wrapper:nth-child(${i + 1}) .wheel-icon-target`,
           {
             borderColor: inactiveBorder,
             backgroundColor: inactiveBg,
@@ -270,7 +270,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           label
         );
         tl.to(
-          `.wheel-icon-target:nth-child(${i + 2})`,
+          `.node-wrapper:nth-child(${i + 2}) .wheel-icon-target`,
           {
             borderColor: activeBorder,
             backgroundColor: activeBg,
