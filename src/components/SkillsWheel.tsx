@@ -24,6 +24,7 @@ import {
   Code2,
   Boxes,
   Blocks,
+  Wrench,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -103,7 +104,7 @@ const SKILL_ZONES: SkillZone[] = [
     numberStr: '05',
     title: 'FIELD TOOLING',
     watermark: 'TOOLING',
-    icon: Terminal,
+    icon: Wrench,
     skills: [
       { name: 'Git', icon: GitBranch },
       { name: 'GitHub', icon: GitCommit },
