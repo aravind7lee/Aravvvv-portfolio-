@@ -211,7 +211,7 @@ export default function SectionsPro({
       {/* Pinned Cinematic Scroll Viewport */}
       <div
         ref={pinRef}
-        className="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden py-8 px-4 md:px-12 z-10"
+        className="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden pt-14 pb-6 sm:py-8 px-4 md:px-12 z-10"
         style={{ backgroundColor: bgColor }}
       >
         {/* Editorial Top Navigation & Badge Header */}

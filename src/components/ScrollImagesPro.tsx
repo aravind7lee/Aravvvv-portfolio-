@@ -105,7 +105,7 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
       {/* Pinned Viewport Frame */}
       <div
         ref={pinRef}
-        className="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden bg-black py-6 md:py-8 px-4 md:px-12 z-10"
+        className="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden bg-black pt-14 pb-6 sm:py-8 px-4 md:px-12 z-10"
       >
         {/* Clean Editorial Section Header (No Gradients or Neon Glows) */}
         <div className="relative z-30 w-full flex items-center justify-between border-b border-white/10 pb-4 max-w-7xl mx-auto">

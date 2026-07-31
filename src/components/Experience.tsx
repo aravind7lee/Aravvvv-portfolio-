@@ -143,15 +143,15 @@ export default function Experience({ theme }: ExperienceProps) {
         className="w-full h-screen overflow-hidden bg-black relative flex flex-col select-none"
       >
         {/* ── EDITORIAL HEADER ── */}
-        <div className="relative z-30 w-full flex items-center justify-between border-b border-zinc-800/80 px-6 md:px-12 lg:px-16 py-4 md:py-5">
-          <div className="flex items-center gap-3">
+        <div className="relative z-30 w-full flex items-center justify-between border-b border-zinc-800/80 px-4 sm:px-6 md:px-12 lg:px-16 pt-14 pb-3 sm:py-4 md:py-5">
+          <div className="flex items-center gap-2 sm:gap-3">
             <span className={`w-2 h-2 rounded-full ${primaryBg}`} />
-            <span className="font-mono text-xs font-bold tracking-widest text-zinc-300 uppercase">
+            <span className="font-mono text-[9px] sm:text-xs font-bold tracking-wider sm:tracking-widest text-zinc-300 uppercase whitespace-nowrap">
               FIELD DEPLOYMENT // INTERNSHIPS
             </span>
           </div>
 
-          <h2 className="text-lg md:text-2xl font-black tracking-tight text-white uppercase font-sans">
+          <h2 className="text-sm sm:text-lg md:text-2xl font-black tracking-tight text-white uppercase font-sans whitespace-nowrap">
             BATTLE <span className={primaryText}>RECORD</span>
           </h2>
 
@@ -179,20 +179,20 @@ export default function Experience({ theme }: ExperienceProps) {
             <span
               key={`wm-${d.id}`}
               className="exp-watermark absolute font-black uppercase tracking-tighter leading-none select-none will-change-transform text-white [-webkit-text-stroke:1px_rgba(255,255,255,0.07)]"
-              style={{ fontSize: 'clamp(80px, 18vw, 260px)' }}
+              style={{ fontSize: 'clamp(60px, 16vw, 260px)' }}
             >
               {d.watermark}
             </span>
           ))}
         </div>
 
-        {/* ── LEFT PROGRESS RAIL ── */}
-        <div className="absolute left-4 md:left-8 top-24 bottom-16 w-[2px] bg-zinc-800 rounded-full overflow-hidden z-20">
+        {/* ── LEFT PROGRESS RAIL (Hidden on mobile) ── */}
+        <div className="hidden sm:block absolute left-4 md:left-8 top-24 bottom-16 w-[2px] bg-zinc-800 rounded-full overflow-hidden z-20">
           <div className={`exp-progress-fill absolute top-0 left-0 w-full rounded-full ${primaryBg}`} />
         </div>
 
-        {/* ── DOT NAV ── */}
-        <div className="absolute left-[7px] md:left-[23px] top-1/2 -translate-y-1/2 z-20 flex flex-col gap-4">
+        {/* ── DOT NAV (Hidden on mobile) ── */}
+        <div className="hidden sm:flex absolute left-[7px] md:left-[23px] top-1/2 -translate-y-1/2 z-20 flex-col gap-4">
           {DEPLOYMENTS.map((d, i) => (
             <div
               key={`dot-${d.id}`}
@@ -202,47 +202,47 @@ export default function Experience({ theme }: ExperienceProps) {
         </div>
 
         {/* ── MAIN CONTENT PANELS ── */}
-        <div className="flex-1 relative w-full max-w-7xl mx-auto px-8 md:px-16 lg:px-20 flex items-center z-10">
+        <div className="flex-1 relative w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-16 lg:px-20 flex items-center z-10 py-2 sm:py-0 overflow-y-auto sm:overflow-visible">
           {DEPLOYMENTS.map((d) => {
             const Icon = d.icon;
             return (
               <div
                 key={d.id}
-                className="exp-content absolute inset-x-8 md:inset-x-16 lg:inset-x-20 will-change-transform grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center"
+                className="exp-content absolute inset-x-4 sm:inset-x-8 md:inset-x-16 lg:inset-x-20 will-change-transform grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-16 items-center max-h-[82vh] overflow-y-auto sm:overflow-visible"
               >
                 {/* LEFT: MISSION INFO */}
-                <div className="lg:col-span-6 flex flex-col gap-5">
+                <div className="lg:col-span-6 flex flex-col gap-2.5 sm:gap-5">
                   {/* Top meta row */}
-                  <div className="flex items-center gap-4">
-                    <span className={`font-mono text-[10px] font-bold tracking-[0.3em] uppercase px-3 py-1.5 rounded-full border ${primaryBorder} ${primaryText} bg-black/80`}>
+                  <div className="flex items-center gap-3">
+                    <span className={`font-mono text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase px-2.5 py-1 rounded-full border ${primaryBorder} ${primaryText} bg-black/80 whitespace-nowrap`}>
                       {d.type}
                     </span>
-                    <span className="h-px w-8 bg-zinc-700" />
-                    <span className="font-mono text-[10px] text-zinc-500 tracking-widest uppercase">{d.period}</span>
+                    <span className="h-px w-6 sm:w-8 bg-zinc-700" />
+                    <span className="font-mono text-[9px] sm:text-[10px] text-zinc-500 tracking-wider uppercase whitespace-nowrap">{d.period}</span>
                   </div>
 
                   {/* Role title */}
                   <div>
-                    <h3 className="font-sans text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black text-white uppercase tracking-tight leading-[1.02]">
+                    <h3 className="font-sans text-lg sm:text-3xl md:text-5xl lg:text-[3.5rem] font-black text-white uppercase tracking-tight leading-[1.05]">
                       {d.role.split(' ').slice(0, -1).join(' ')}
                     </h3>
-                    <h3 className={`font-sans text-3xl sm:text-4xl md:text-5xl lg:text-[3.5rem] font-black uppercase tracking-tight leading-[1.02] ${primaryText}`}>
+                    <h3 className={`font-sans text-lg sm:text-3xl md:text-5xl lg:text-[3.5rem] font-black uppercase tracking-tight leading-[1.05] ${primaryText}`}>
                       {d.role.split(' ').slice(-1)[0]}
                     </h3>
                   </div>
 
                   {/* Company badge */}
-                  <div className={`inline-flex items-center gap-2.5 self-start px-4 py-2 rounded-xl bg-zinc-950 border ${primaryBorder}`}>
-                    <Icon className={`w-4 h-4 ${primaryText}`} />
-                    <span className="font-mono text-xs font-bold tracking-widest text-white uppercase">{d.company}</span>
+                  <div className={`inline-flex items-center gap-2 self-start px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl bg-zinc-950 border ${primaryBorder}`}>
+                    <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${primaryText}`} />
+                    <span className="font-mono text-[10px] sm:text-xs font-bold tracking-widest text-white uppercase">{d.company}</span>
                   </div>
 
                   {/* Stack tags */}
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {d.stack.map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 text-[10px] font-mono font-bold tracking-widest uppercase rounded-md bg-zinc-900 text-zinc-300 border border-zinc-800"
+                        className="px-2 sm:px-3 py-0.5 sm:py-1 text-[9px] sm:text-[10px] font-mono font-bold tracking-widest uppercase rounded-md bg-zinc-900 text-zinc-300 border border-zinc-800 whitespace-nowrap"
                       >
                         {tag}
                       </span>
@@ -251,27 +251,27 @@ export default function Experience({ theme }: ExperienceProps) {
                 </div>
 
                 {/* RIGHT: IMPACT LOG */}
-                <div className="lg:col-span-6 flex flex-col gap-3">
-                  <div className="flex items-center gap-3 mb-1">
-                    <span className={`w-1 h-4 rounded-full ${primaryBg}`} />
-                    <span className="font-mono text-[10px] font-bold tracking-[0.3em] uppercase text-zinc-500">
+                <div className="lg:col-span-6 flex flex-col gap-2 sm:gap-3">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <span className={`w-1 h-3 sm:h-4 rounded-full ${primaryBg}`} />
+                    <span className="font-mono text-[9px] sm:text-[10px] font-bold tracking-[0.25em] uppercase text-zinc-500">
                       IMPACT LOG
                     </span>
                   </div>
 
-                  <div className={`rounded-2xl bg-zinc-950 border ${primaryBorder} p-5 md:p-6 space-y-4`}>
+                  <div className={`rounded-xl sm:rounded-2xl bg-zinc-950 border ${primaryBorder} p-3.5 sm:p-5 md:p-6 space-y-2 sm:space-y-4`}>
                     {d.impact.map((line, i) => (
-                      <div key={i} className="flex items-start gap-3 group">
-                        <div className={`mt-[7px] w-[5px] h-[5px] rounded-full shrink-0 ${primaryBg} group-hover:scale-125 transition-transform duration-200`} />
-                        <p className="text-sm md:text-base text-zinc-300 leading-relaxed font-sans">{line}</p>
+                      <div key={i} className="flex items-start gap-2.5 group">
+                        <div className={`mt-[6px] w-[4px] h-[4px] sm:w-[5px] sm:h-[5px] rounded-full shrink-0 ${primaryBg} group-hover:scale-125 transition-transform duration-200`} />
+                        <p className="text-xs sm:text-sm md:text-base text-zinc-300 leading-normal sm:leading-relaxed font-sans">{line}</p>
                       </div>
                     ))}
                   </div>
 
                   {/* Deployment index stamp */}
-                  <div className="flex items-center justify-end gap-2 mt-1">
-                    <span className="font-mono text-[10px] text-zinc-600 tracking-widest uppercase">DEPLOYMENT</span>
-                    <span className={`font-mono text-xs font-black ${primaryText}`}>{d.index} / 0{DEPLOYMENTS.length}</span>
+                  <div className="flex items-center justify-end gap-2 mt-0.5">
+                    <span className="font-mono text-[9px] text-zinc-600 tracking-widest uppercase">DEPLOYMENT</span>
+                    <span className={`font-mono text-[10px] sm:text-xs font-black ${primaryText}`}>{d.index} / 0{DEPLOYMENTS.length}</span>
                   </div>
                 </div>
               </div>
@@ -280,15 +280,15 @@ export default function Experience({ theme }: ExperienceProps) {
         </div>
 
         {/* ── BOTTOM SCROLL CUE ── */}
-        <div className="absolute bottom-5 md:bottom-7 left-6 md:left-12 lg:left-16 flex items-center gap-3 opacity-50 z-20">
+        <div className="hidden sm:flex absolute bottom-5 md:bottom-7 left-6 md:left-12 lg:left-16 items-center gap-3 opacity-50 z-20">
           <div className={`w-8 h-[2px] ${primaryBg}`} />
           <span className="font-mono text-[10px] text-zinc-400 tracking-[0.3em] uppercase font-semibold">
             SCROLL TO CYCLE DEPLOYMENTS
           </span>
         </div>
 
-        {/* ── RIGHT SIDE: GIANT INDEX NUMBER ── */}
-        <div className="absolute right-6 md:right-12 lg:right-16 bottom-8 z-20 pointer-events-none">
+        {/* ── RIGHT SIDE: GIANT INDEX NUMBER (Hidden on mobile) ── */}
+        <div className="hidden md:block absolute right-6 md:right-12 lg:right-16 bottom-8 z-20 pointer-events-none">
           <div className="relative h-16 md:h-20 overflow-hidden flex items-center">
             {DEPLOYMENTS.map((d) => (
               <span
