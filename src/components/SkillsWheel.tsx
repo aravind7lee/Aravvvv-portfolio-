@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -122,6 +122,14 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
   const [activeZone, setActiveZone] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const isRed = theme === 'red';
   const primaryBgClass = isRed ? 'bg-red-500' : 'bg-blue-600';
@@ -388,7 +396,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
                         window.scrollTo({ top: targetY, behavior: 'smooth' });
                       }
                     }}
-                    className={`node-wrapper absolute top-1/2 left-1/2 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 -mt-5 -ml-5 sm:-mt-7 sm:-ml-7 md:-mt-8 md:-ml-8 cursor-pointer pointer-events-auto transition-all duration-300 ${
+                    className={`node-wrapper absolute top-1/2 left-1/2 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 -mt-5 -ml-5 sm:-mt-7 sm:-ml-7 md:-mt-8 md:-ml-8 cursor-pointer pointer-events-auto transition-all duration-300 [--ring-radius:105px] sm:[--ring-radius:150px] md:[--ring-radius:190px] ${
                       isActive ? 'opacity-100 scale-110 z-30' : 'opacity-40 scale-90 z-10'
                     }`}
                     style={{
