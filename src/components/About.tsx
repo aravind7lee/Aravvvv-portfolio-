@@ -80,21 +80,21 @@ export default function About({ theme }: AboutProps) {
     <section
       id="about-content"
       ref={sectionRef}
-      className="relative w-full min-h-screen bg-black py-24 md:py-32 flex items-center overflow-hidden border-t border-zinc-900"
+      className="relative w-full min-h-screen bg-black pt-20 pb-16 sm:py-24 md:py-32 flex items-center overflow-hidden border-t border-zinc-900"
     >
-      <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-start">
+      <div className="container mx-auto px-4 sm:px-6 md:px-12 max-w-7xl relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-16 lg:gap-8 items-start">
           {/* Left Column */}
           <div className="lg:col-span-7 flex flex-col pt-2">
             {/* Identity Tag */}
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4 sm:mb-6">
               <span className="relative flex h-2.5 w-2.5">
                 <span
                   className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${primaryBgClass}`}
                 />
                 <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${primaryBgClass}`} />
               </span>
-              <span className="font-mono text-xs tracking-[0.2em] uppercase text-zinc-400 font-bold flex items-center gap-2">
+              <span className="font-mono text-[10px] sm:text-xs tracking-[0.2em] uppercase text-zinc-400 font-bold flex items-center gap-2">
                 {isRed ? (
                   <>
                     <ShieldAlert className="w-3.5 h-3.5 text-red-500" />
@@ -112,7 +112,7 @@ export default function About({ theme }: AboutProps) {
             {/* Headline */}
             <h2
               ref={titleRef}
-              className="font-sans text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-[1.2] mb-6 uppercase"
+              className="font-sans text-xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-[1.2] mb-4 sm:mb-6 uppercase"
             >
               Architecting high-performance systems with{' '}
               <span className={primaryColorClass}>precision.</span>
@@ -121,7 +121,7 @@ export default function About({ theme }: AboutProps) {
             {/* Body Text */}
             <div
               ref={textRef}
-              className="space-y-4 font-sans text-zinc-300 text-sm sm:text-base font-normal leading-relaxed max-w-xl"
+              className="space-y-4 font-sans text-zinc-300 text-xs sm:text-base font-normal leading-relaxed max-w-xl"
             >
               <p>
                 As an MCA graduate, I specialize in engineering robust SaaS products and AI-driven platforms. My focus lies at the intersection of high-performance backend architecture and seamless, accessible frontend execution.
@@ -131,11 +131,11 @@ export default function About({ theme }: AboutProps) {
               </p>
 
               {/* Stack Badges */}
-              <div className="pt-2 flex flex-wrap gap-2">
+              <div className="pt-2 flex flex-wrap gap-1.5 sm:gap-2">
                 {['MERN / PERN STACK', 'SAAS ARCHITECTURE', 'AI PLATFORMS', 'SYSTEM DESIGN'].map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 text-[10px] font-mono font-semibold tracking-wider uppercase rounded-full text-zinc-300 border border-zinc-800 bg-zinc-900/90"
+                    className="px-2.5 sm:px-3 py-1 text-[9px] sm:text-[10px] font-mono font-semibold tracking-wider uppercase rounded-full text-zinc-300 border border-zinc-800 bg-zinc-900/90 whitespace-nowrap"
                   >
                     {tag}
                   </span>
@@ -146,41 +146,41 @@ export default function About({ theme }: AboutProps) {
             {/* Metrics */}
             <div
               ref={statsRef}
-              className="flex flex-wrap gap-8 sm:gap-12 mt-8 pt-6 border-t border-zinc-800"
+              className="grid grid-cols-3 gap-3 sm:gap-8 md:gap-12 mt-6 sm:mt-8 pt-6 border-t border-zinc-800"
             >
               <div className="flex flex-col group cursor-default">
-                <span className="font-sans text-3xl sm:text-4xl font-black text-white mb-1">
+                <span className="font-sans text-2xl sm:text-4xl font-black text-white mb-1">
                   10<span className={primaryColorClass}>+</span>
                 </span>
-                <div className="flex items-center gap-2 text-zinc-400 font-mono text-[11px] uppercase tracking-widest">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-zinc-400 font-mono text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest whitespace-nowrap">
                   <span className={primaryColorClass}>✦</span> Projects Built
                 </div>
               </div>
 
               <div className="flex flex-col group cursor-default">
-                <span className="font-sans text-3xl sm:text-4xl font-black text-white mb-1">
+                <span className="font-sans text-2xl sm:text-4xl font-black text-white mb-1">
                   3
                 </span>
-                <div className="flex items-center gap-2 text-zinc-400 font-mono text-[11px] uppercase tracking-widest">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-zinc-400 font-mono text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest whitespace-nowrap">
                   <span className={primaryColorClass}>⎋</span> Internships
                 </div>
               </div>
 
               <div className="flex flex-col group cursor-default">
-                <span className="font-sans text-3xl sm:text-4xl font-black text-white mb-1">
+                <span className="font-sans text-2xl sm:text-4xl font-black text-white mb-1">
                   100<span className={primaryColorClass}>%</span>
                 </span>
-                <div className="flex items-center gap-2 text-zinc-400 font-mono text-[11px] uppercase tracking-widest">
+                <div className="flex items-center gap-1.5 sm:gap-2 text-zinc-400 font-mono text-[9px] sm:text-[11px] uppercase tracking-wider sm:tracking-widest whitespace-nowrap">
                   <span className={primaryColorClass}>★</span> Commitment
                 </div>
               </div>
             </div>
 
             {/* CTA Button */}
-            <div ref={ctaRef} className="mt-8">
+            <div ref={ctaRef} className="mt-6 sm:mt-8">
               <a
                 href="#contact"
-                className={`group inline-flex items-center gap-3 px-6 py-3 font-mono text-xs uppercase tracking-[0.15em] font-bold text-white transition-all duration-300 cursor-pointer rounded-full shadow-lg ${
+                className={`group inline-flex items-center gap-3 px-5 sm:px-6 py-2.5 sm:py-3 font-mono text-xs uppercase tracking-[0.15em] font-bold text-white transition-all duration-300 cursor-pointer rounded-full shadow-lg ${
                   isRed
                     ? 'bg-red-500 hover:bg-red-600'
                     : 'bg-blue-600 hover:bg-blue-700'
@@ -193,25 +193,25 @@ export default function About({ theme }: AboutProps) {
           </div>
 
           {/* Right Column: Timeline Cards */}
-          <div className="lg:col-span-5 flex flex-col pt-4 mt-8 lg:mt-0">
-            <div className="flex flex-col relative">
+          <div className="lg:col-span-5 flex flex-col pt-2 sm:pt-4 mt-6 lg:mt-0">
+            <div className="flex flex-col relative pl-4 sm:pl-0">
               <div
                 ref={lineRef}
-                className={`absolute top-0 bottom-0 left-[6px] w-[2px] origin-top ${
+                className={`absolute top-0 bottom-0 left-[2px] sm:left-[6px] w-[2px] origin-top ${
                   isRed ? 'bg-red-500/80' : 'bg-blue-600/80'
                 }`}
               />
 
               <div ref={timelineRef} className="flex flex-col space-y-6">
                 {/* MCA Item */}
-                <div className="relative pl-8 p-5 -ml-3 rounded-2xl bg-zinc-950 border border-zinc-800">
+                <div className="relative pl-6 sm:pl-8 p-4 sm:p-5 ml-3 sm:ml-0 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-xl">
                   <div
-                    className={`absolute left-[-5px] top-6 w-[12px] h-[12px] bg-black border ${primaryBorderClass}`}
+                    className={`absolute left-[-15px] sm:left-[-17px] top-6 w-[10px] sm:w-[12px] h-[10px] sm:h-[12px] bg-black border ${primaryBorderClass}`}
                   />
                   <span className={`font-mono text-xs tracking-[0.2em] uppercase mb-1 block ${primaryColorClass}`}>
                     2023 – 2025
                   </span>
-                  <h3 className="font-sans text-2xl text-white font-black mb-1 uppercase tracking-tight">
+                  <h3 className="font-sans text-xl sm:text-2xl text-white font-black mb-1 uppercase tracking-tight">
                     MCA
                   </h3>
                   <p className="text-xs text-zinc-400 mb-3 font-mono uppercase">
@@ -225,14 +225,14 @@ export default function About({ theme }: AboutProps) {
                 </div>
 
                 {/* BCA Item */}
-                <div className="relative pl-8 p-5 -ml-3 rounded-2xl bg-zinc-950 border border-zinc-800">
+                <div className="relative pl-6 sm:pl-8 p-4 sm:p-5 ml-3 sm:ml-0 rounded-2xl bg-zinc-950 border border-zinc-800 shadow-xl">
                   <div
-                    className={`absolute left-[-5px] top-6 w-[12px] h-[12px] bg-black border ${primaryBorderClass}`}
+                    className={`absolute left-[-15px] sm:left-[-17px] top-6 w-[10px] sm:w-[12px] h-[10px] sm:h-[12px] bg-black border ${primaryBorderClass}`}
                   />
                   <span className={`font-mono text-xs tracking-[0.2em] uppercase mb-1 block ${primaryColorClass}`}>
                     2020 – 2023
                   </span>
-                  <h3 className="font-sans text-2xl text-white font-black mb-1 uppercase tracking-tight">
+                  <h3 className="font-sans text-xl sm:text-2xl text-white font-black mb-1 uppercase tracking-tight">
                     BCA
                   </h3>
                   <p className="text-xs text-zinc-400 mb-3 font-mono uppercase">

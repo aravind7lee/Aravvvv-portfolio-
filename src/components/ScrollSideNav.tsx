@@ -66,7 +66,7 @@ export default function ScrollSideNav({
   return (
     <nav 
       aria-label="Scroll Side Navigation"
-      className="fixed right-3 md:right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col items-end gap-4 md:gap-6 pointer-events-auto select-none"
+      className="hidden md:flex fixed right-3 md:right-8 top-1/2 -translate-y-1/2 z-50 flex-col items-end gap-4 md:gap-6 pointer-events-auto select-none"
     >
       {/* Background Vertical Laser Guide Track */}
       <div className="absolute right-[9px] md:right-[11px] top-3 bottom-3 w-[1px] bg-gradient-to-b from-transparent via-white/15 to-transparent pointer-events-none" />

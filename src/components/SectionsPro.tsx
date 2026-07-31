@@ -292,9 +292,9 @@ export default function SectionsPro({
           ref={contentCardRef}
           className="relative z-30 w-full max-w-5xl mx-auto my-auto opacity-0 translate-y-12 transition-all duration-300 pointer-events-auto"
         >
-          <div className="bg-zinc-950/90 backdrop-blur-2xl p-6 sm:p-8 md:p-10 rounded-3xl border border-white/15 shadow-[0_25px_60px_rgba(0,0,0,0.9)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-            <div className="md:col-span-8 space-y-4">
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight uppercase font-sans">
+          <div className="bg-zinc-950/90 backdrop-blur-2xl p-4 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl border border-white/15 shadow-[0_25px_60px_rgba(0,0,0,0.9)] grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-8 items-center">
+            <div className="md:col-span-8 space-y-3 sm:space-y-4">
+              <h2 className="text-xl sm:text-4xl font-extrabold text-white tracking-tight uppercase font-sans">
                 {mainHeading}
               </h2>
 
@@ -303,11 +303,11 @@ export default function SectionsPro({
               </p>
 
               {/* Tag Pills */}
-              <div className="flex flex-wrap gap-2 pt-2">
+              <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-1 sm:pt-2">
                 {defaultTags.map((tag) => (
                   <span
                     key={tag}
-                    className="px-3 py-1 rounded-lg text-[11px] font-mono font-semibold bg-zinc-900/90 text-white/90 border border-white/15"
+                    className="px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-lg text-[9px] sm:text-[11px] font-mono font-semibold bg-zinc-900/90 text-white/90 border border-white/15 whitespace-nowrap"
                   >
                     {tag}
                   </span>
