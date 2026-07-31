@@ -12,6 +12,7 @@ import Works from './components/Works';
 import Contact from './components/Contact';
 import ScrollSideNav from './components/ScrollSideNav';
 import SectionsPro from './components/SectionsPro';
+import StickyHeader from './components/StickyHeader';
 
 import revealAboutRed from './assets/sections_pro/reveal_about_red.png';
 import revealAboutBlue from './assets/sections_pro/reveal_about_blue.png';
@@ -96,10 +97,11 @@ function App() {
 
   return (
     <main className={`min-h-screen w-full flex flex-col bg-background relative overflow-hidden ${theme === 'red' ? 'theme-red' : 'theme-blue'}`}>
+      <StickyHeader theme={theme} onThemeChange={setTheme} />
       <ScrollSideNav theme={theme} />
 
       {/* SECTION 01: HERO */}
-      <Hero theme={theme} onThemeChange={setTheme} />
+      <Hero theme={theme} />
 
       {/* SECTION 02: ABOUT */}
       <SectionsPro

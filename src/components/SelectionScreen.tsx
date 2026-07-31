@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import chooseImage from '../assets/ChooseAnyOne.png';
+import gtaMenuHoverMp3 from '../assets/audio/gta_menu_hover.mp3';
+import gtaRespectMp3 from '../assets/audio/gta_respect.mp3';
 import { Activity, Flame, Sparkles, Volume2, VolumeX, ArrowLeft, ArrowRight, Shield, Zap } from 'lucide-react';
 
 interface SelectionScreenProps {
@@ -14,28 +16,44 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const [transitioning, setTransitioning] = useState<'none' | 'red' | 'blue'>('none');
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Web Audio API Synthesizer for tactile cinematic sound feedback
-  const playAudioTone = (freq: number, type: OscillatorType = 'sine', duration = 0.25, volume = 0.04) => {
+  // Audio references for official GTA San Andreas game sound effects
+  const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
+  const selectAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    hoverAudioRef.current = new Audio(gtaMenuHoverMp3);
+    selectAudioRef.current = new Audio(gtaRespectMp3);
+
+    [hoverAudioRef.current, selectAudioRef.current].forEach((audio) => {
+      if (audio) {
+        audio.preload = 'auto';
+      }
+    });
+  }, []);
+
+  const playSanAndreasHoverFX = (_isRed: boolean) => {
     if (!soundEnabled) return;
     try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = type;
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      gain.gain.setValueAtTime(volume, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime + duration);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-      osc.stop(ctx.currentTime + duration);
+      if (hoverAudioRef.current) {
+        const audio = hoverAudioRef.current.cloneNode() as HTMLAudioElement;
+        audio.volume = 0.9;
+        audio.play().catch(() => {});
+      }
     } catch {
-      // Audio context failover
+      // Audio failover
+    }
+  };
+
+  const playSanAndreasSelectFX = (_choice: 'blue' | 'red') => {
+    if (!soundEnabled) return;
+    try {
+      if (selectAudioRef.current) {
+        const audio = selectAudioRef.current.cloneNode() as HTMLAudioElement;
+        audio.volume = 1.0;
+        audio.play().catch(() => {});
+      }
+    } catch {
+      // Audio failover
     }
   };
 
@@ -72,21 +90,13 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onSelect, transitioning, soundEnabled]);
 
-  // Handle Selection with Warp FX
+  // Handle Selection with GTA SA Warp FX
   const triggerSelect = (choice: 'blue' | 'red') => {
     if (transitioning !== 'none') return;
     setTransitioning(choice);
 
     // Audio sting
-    if (choice === 'blue') {
-      playAudioTone(45, 'sine', 0.9, 0.12);
-      playAudioTone(110, 'triangle', 0.6, 0.08);
-      playAudioTone(220, 'sine', 0.4, 0.05);
-    } else {
-      playAudioTone(40, 'sawtooth', 0.9, 0.12);
-      playAudioTone(85, 'sine', 0.6, 0.08);
-      playAudioTone(170, 'triangle', 0.4, 0.05);
-    }
+    playSanAndreasSelectFX(choice);
 
     setTimeout(() => {
       onSelect(choice);
@@ -104,8 +114,7 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
 
   const handleHoverState = (state: 'none' | 'left' | 'right') => {
     if (state !== hovered && state !== 'none') {
-      if (state === 'left') playAudioTone(55, 'sine', 0.25, 0.05);
-      if (state === 'right') playAudioTone(50, 'sawtooth', 0.25, 0.05);
+      playSanAndreasHoverFX(state === 'right');
     }
     setHovered(state);
   };

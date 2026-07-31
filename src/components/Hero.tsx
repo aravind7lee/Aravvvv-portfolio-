@@ -1,15 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ArrowLeft, Flame, ShieldAlert, ChevronDown, Terminal } from 'lucide-react';
+import { ShieldAlert, ChevronDown, Terminal } from 'lucide-react';
 import heroRedPill from '../assets/Hero-RedPill.png';
 import heroBluePill from '../assets/Hero-BluePill.png';
 
 interface HeroProps {
   theme: 'red' | 'blue';
-  onThemeChange: (theme: 'selection' | 'red' | 'blue') => void;
 }
 
-export default function Hero({ theme, onThemeChange }: HeroProps) {
+export default function Hero({ theme }: HeroProps) {
   const imageRef = useRef<HTMLImageElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
   const [imageReady, setImageReady] = useState(false);
@@ -75,77 +74,7 @@ export default function Hero({ theme, onThemeChange }: HeroProps) {
         }`}
       />
 
-      {/* Top Header Controls */}
-      <header className="absolute top-4 sm:top-6 left-0 right-0 z-[50] px-4 sm:px-6 md:px-12 flex items-center justify-between gap-2 pointer-events-none">
-        {/* Left Control: Reselect */}
-        <button
-          onClick={() => onThemeChange('selection')}
-          className="pointer-events-auto group flex items-center gap-2 px-4 py-2 rounded-full bg-black border border-white/20 hover:border-white/40 text-zinc-300 hover:text-white transition-all duration-300 active:scale-95 cursor-pointer shadow-lg"
-        >
-          <ArrowLeft className="w-4 h-4 text-zinc-400 group-hover:text-white group-hover:-translate-x-1 transition-transform duration-300" />
-          <span className="font-mono text-xs uppercase tracking-[0.2em] font-bold">
-            RESELECT PROTOCOL
-          </span>
-        </button>
 
-        {/* Center Badge (Clean Solid Monochrome with Theme Highlight) */}
-        {isRed ? (
-          <div className="hidden lg:flex pointer-events-auto items-center gap-2.5 px-4 py-1.5 rounded-full bg-black border border-red-500/40 shadow-lg">
-            <Flame className="w-4 h-4 text-red-500" />
-            <span className="font-mono text-[10px] font-bold tracking-[0.25em] text-white uppercase">
-              CRIMSON PROTOCOL ACTIVE
-            </span>
-          </div>
-        ) : (
-          <div className="hidden lg:flex pointer-events-auto items-center gap-2.5 px-4 py-1.5 rounded-full bg-black border border-blue-500/40 shadow-lg">
-            <Terminal className="w-4 h-4 text-blue-500" />
-            <span className="font-mono text-[10px] font-bold tracking-[0.25em] text-white uppercase">
-              COBALT PROTOCOL ACTIVE
-            </span>
-          </div>
-        )}
-
-        {/* Right Control: Dual Theme Switcher */}
-        <div className="pointer-events-auto flex items-center p-1.5 rounded-full bg-black border border-white/20 shadow-lg">
-          <button
-            onClick={() => onThemeChange('red')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-              isRed
-                ? 'bg-red-500 text-white font-bold'
-                : 'hover:bg-zinc-900 text-zinc-400 hover:text-red-400'
-            }`}
-          >
-            <span
-              className={`w-2 h-2 rounded-full ${
-                isRed ? 'bg-white' : 'bg-red-500/50'
-              }`}
-            />
-            <span className="font-mono text-xs uppercase tracking-widest font-bold">
-              RED PILL
-            </span>
-          </button>
-
-          <div className="w-[1px] h-4 bg-zinc-800 mx-1" />
-
-          <button
-            onClick={() => onThemeChange('blue')}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-              !isRed
-                ? 'bg-blue-600 text-white font-bold'
-                : 'hover:bg-zinc-900 text-zinc-400 hover:text-blue-400'
-            }`}
-          >
-            <span
-              className={`w-2 h-2 rounded-full ${
-                !isRed ? 'bg-white' : 'bg-blue-500/50'
-              }`}
-            />
-            <span className="font-mono text-xs uppercase tracking-widest font-bold">
-              BLUE PILL
-            </span>
-          </button>
-        </div>
-      </header>
 
       {/* Bottom Floating Card: Clean Solid Card, No Neon Shadows */}
       <div
