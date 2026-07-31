@@ -13,6 +13,7 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [timeStr, setTimeStr] = useState<string>('');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [hasInteracted, setHasInteracted] = useState<boolean>(false);
   const [transitioning, setTransitioning] = useState<'none' | 'red' | 'blue'>('none');
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -31,10 +32,24 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     return audioCtxRef.current;
   };
 
-  const autoResumeAudio = () => {
+  const unlockAudioEngine = () => {
+    setHasInteracted(true);
     const ctx = getAudioCtx();
     if (ctx && ctx.state === 'suspended') {
       ctx.resume().catch(() => {});
+    }
+
+    if (hoverAudioRef.current) {
+      hoverAudioRef.current.play().then(() => {
+        hoverAudioRef.current?.pause();
+        if (hoverAudioRef.current) hoverAudioRef.current.currentTime = 0;
+      }).catch(() => {});
+    }
+    if (selectAudioRef.current) {
+      selectAudioRef.current.play().then(() => {
+        selectAudioRef.current?.pause();
+        if (selectAudioRef.current) selectAudioRef.current.currentTime = 0;
+      }).catch(() => {});
     }
   };
 
@@ -49,57 +64,24 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     hoverAudioRef.current = hoverAudio;
     selectAudioRef.current = selectAudio;
 
-    // Instant zero-click audio activation on any cursor movement, mouseenter, or touch
-    const handleMoveOrTouch = () => {
-      autoResumeAudio();
+    const handleInitialUserGesture = () => {
+      unlockAudioEngine();
     };
 
-    window.addEventListener('pointermove', handleMoveOrTouch, { passive: true });
-    window.addEventListener('mousemove', handleMoveOrTouch, { passive: true });
-    window.addEventListener('mouseenter', handleMoveOrTouch, { passive: true });
-    window.addEventListener('mouseover', handleMoveOrTouch, { passive: true });
-    window.addEventListener('touchstart', handleMoveOrTouch, { passive: true });
-    window.addEventListener('click', handleMoveOrTouch, { capture: true, passive: true });
-    window.addEventListener('keydown', handleMoveOrTouch, { passive: true });
+    window.addEventListener('click', handleInitialUserGesture, { capture: true, passive: true });
+    window.addEventListener('touchstart', handleInitialUserGesture, { capture: true, passive: true });
+    window.addEventListener('keydown', handleInitialUserGesture, { passive: true });
 
     return () => {
-      window.removeEventListener('pointermove', handleMoveOrTouch);
-      window.removeEventListener('mousemove', handleMoveOrTouch);
-      window.removeEventListener('mouseenter', handleMoveOrTouch);
-      window.removeEventListener('mouseover', handleMoveOrTouch);
-      window.removeEventListener('touchstart', handleMoveOrTouch);
-      window.removeEventListener('click', handleMoveOrTouch, { capture: true });
-      window.removeEventListener('keydown', handleMoveOrTouch);
+      window.removeEventListener('click', handleInitialUserGesture, { capture: true });
+      window.removeEventListener('touchstart', handleInitialUserGesture, { capture: true });
+      window.removeEventListener('keydown', handleInitialUserGesture);
     };
   }, []);
 
   const playSanAndreasHoverFX = (_isRed: boolean) => {
     if (!soundEnabled) return;
     try {
-      autoResumeAudio();
-
-      // Engine 1: Web Audio API GTA SA Menu Hover Sound (Guaranteed 0ms response on hover without clicks)
-      const ctx = getAudioCtx();
-      if (ctx) {
-        const now = ctx.currentTime;
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(783.99, now); // G5
-        osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.035); // D6
-
-        gain.gain.setValueAtTime(0.18, now);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(now);
-        osc.stop(now + 0.05);
-      }
-
-      // Engine 2: HTML5 MP3 Audio Playback
       if (hoverAudioRef.current) {
         hoverAudioRef.current.currentTime = 0;
         hoverAudioRef.current.volume = 0.95;
@@ -113,8 +95,6 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const playSanAndreasSelectFX = (_choice: 'blue' | 'red') => {
     if (!soundEnabled) return;
     try {
-      autoResumeAudio();
-
       if (selectAudioRef.current) {
         selectAudioRef.current.currentTime = 0;
         selectAudioRef.current.volume = 1.0;
@@ -200,6 +180,42 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
       onMouseLeave={() => handleHoverState('none')}
       className="h-screen w-screen relative overflow-hidden bg-[#030304] flex items-center justify-center select-none perspective-[1200px]"
     >
+      {/* Initial Matrix Audio Unlock Splash Screen Pass */}
+      {!hasInteracted && (
+        <div
+          onClick={unlockAudioEngine}
+          className="absolute inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center cursor-pointer select-none px-4 text-center transition-all duration-500"
+        >
+          <div className="relative flex flex-col items-center max-w-md w-full space-y-6">
+            {/* Animated Pill Matrix Glowing Ring */}
+            <div className="relative flex items-center justify-center w-24 h-24 rounded-full border border-emerald-500/40 bg-emerald-950/20 shadow-[0_0_50px_rgba(16,185,129,0.3)] animate-pulse">
+              <div className="flex items-center gap-2">
+                <span className="w-4 h-7 rounded-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.8)]" />
+                <span className="w-4 h-7 rounded-full bg-red-500 shadow-[0_0_15px_rgba(239,68,68,0.8)]" />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 font-mono text-[10px] sm:text-xs font-bold text-emerald-400 tracking-[0.25em] uppercase">
+                <Activity className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <span>SYSTEM INITIALIZATION</span>
+              </div>
+              <h2 className="text-2xl sm:text-4xl font-black text-white font-sans uppercase tracking-widest drop-shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+                ENTER THE MATRIX
+              </h2>
+            </div>
+
+            <div className="px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-mono font-black text-xs sm:text-sm tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_0_30px_rgba(16,185,129,0.6)] animate-bounce flex items-center gap-2">
+              <Volume2 className="w-4 h-4 text-black" />
+              <span>CLICK ANYWHERE TO START PROTOCOL</span>
+            </div>
+
+            <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+              [ ENABLES GTA SAN ANDREAS AUDIO EFFECTS & HOVER SOUNDS ]
+            </p>
+          </div>
+        </div>
+      )}
       {/* Cinematic Pill Iris Energy Reveal Overlay Pass */}
       <div
         className={`absolute inset-0 z-50 pointer-events-none transition-all duration-850 ease-in-out ${
