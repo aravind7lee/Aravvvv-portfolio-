@@ -252,22 +252,10 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           label
         );
         // Refresh ScrollTrigger to calculate accurate layout metrics
-        // G. Background Watermark Parallax Transition
-        tl.to(
-          `.watermark-text:nth-child(${i + 1})`,
-          { opacity: 0, scale: 1.1, ease: 'none' },
-          label
-        );
-        tl.to(
-          `.watermark-text:nth-child(${i + 2})`,
-          { opacity: 0.03, scale: 1, ease: 'none' },
-          label
-        );
-        // Refresh ScrollTrigger to calculate accurate layout metrics
         ScrollTrigger.refresh();
       }
     },
-    { scope: containerRef, dependencies: [theme] }
+    { scope: containerRef }
   );
 
   return (
