@@ -426,9 +426,9 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
                     }}
                   >
                     <div
-                      className="wheel-icon wheel-icon-target w-full h-full rounded-full border flex items-center justify-center transition-all duration-300"
+                      className="wheel-icon wheel-icon-target w-full h-full rounded-full border flex items-center justify-center transition-all duration-300 shadow-lg"
                     >
-                      <ZoneIcon className="w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6" />
+                      <ZoneIcon className="w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6 text-current stroke-[2.2] transition-all duration-300" />
                     </div>
                   </div>
                 );
