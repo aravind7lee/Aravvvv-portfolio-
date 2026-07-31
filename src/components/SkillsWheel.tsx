@@ -271,15 +271,15 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
         className="w-full h-screen overflow-hidden bg-black relative flex items-center justify-center select-none"
       >
         {/* TOP EDITORIAL SECTION HEADER */}
-        <div className="absolute top-6 md:top-8 left-12 md:left-24 right-8 md:right-16 z-30 flex items-center justify-between border-b border-zinc-800/80 pb-3 md:pb-4 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+        <div className="absolute top-14 sm:top-16 md:top-8 left-4 sm:left-12 md:left-24 right-4 sm:right-8 md:right-16 z-30 flex items-center justify-between border-b border-zinc-800/80 pb-2.5 md:pb-4 max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 sm:gap-3">
             <span className={`w-2 h-2 rounded-full ${primaryBgClass}`} />
-            <span className="font-mono text-xs font-bold tracking-widest text-zinc-300 uppercase">
+            <span className="font-mono text-[9px] sm:text-xs font-bold tracking-wider sm:tracking-widest text-zinc-300 uppercase whitespace-nowrap">
               TECHNICAL MASTERY // 03 SKILLS
             </span>
           </div>
 
-          <h2 className="text-lg md:text-2xl font-black tracking-tight text-white uppercase font-sans">
+          <h2 className="hidden sm:block text-lg md:text-2xl font-black tracking-tight text-white uppercase font-sans whitespace-nowrap">
             TECHNICAL <span className={primaryTextClass}>MASTERY</span>
           </h2>
 
@@ -291,8 +291,8 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           </div>
         </div>
 
-        {/* FULL HEIGHT LEFT VERTICAL LASER PROGRESS RAIL */}
-        <div className="absolute left-4 md:left-12 lg:left-16 top-24 bottom-16 w-[2px] bg-zinc-800 rounded-full overflow-hidden z-20">
+        {/* FULL HEIGHT LEFT VERTICAL LASER PROGRESS RAIL (Hidden on mobile) */}
+        <div className="hidden sm:block absolute left-4 md:left-12 lg:left-16 top-24 bottom-16 w-[2px] bg-zinc-800 rounded-full overflow-hidden z-20">
           <div
             className={`laser-progress-bar absolute top-0 left-0 w-full h-1/5 rounded-full ${primaryBgClass}`}
           />
@@ -303,7 +303,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           {SKILL_ZONES.map((zone) => (
             <span
               key={`watermark-${zone.id}`}
-              className="watermark-text absolute text-[14vw] md:text-[18vw] font-black uppercase text-zinc-800/40 tracking-tighter leading-none select-none will-change-transform will-change-opacity whitespace-nowrap"
+              className="watermark-text absolute text-[12vw] sm:text-[14vw] md:text-[18vw] font-black uppercase text-zinc-800/40 tracking-tighter leading-none select-none will-change-transform will-change-opacity whitespace-nowrap"
             >
               {zone.watermark}
             </span>
@@ -311,9 +311,9 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
         </div>
 
         {/* MAIN GRID: LEFT CONTENT + RIGHT WHEEL SELECTOR */}
-        <div className="w-full max-w-[1500px] mx-auto px-8 md:px-16 lg:px-24 pl-12 md:pl-24 lg:pl-32 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center z-10">
+        <div className="w-full max-w-[1500px] mx-auto px-4 sm:px-8 md:px-16 lg:px-24 pt-12 sm:pt-0 grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-8 lg:gap-12 items-center z-10">
           {/* LEFT PANEL: ZONE CONTENT */}
-          <div className="lg:col-span-7 relative h-[420px] md:h-[450px] w-full flex items-center">
+          <div className="lg:col-span-7 relative h-[260px] sm:h-[380px] md:h-[450px] w-full flex items-center">
             <div className="relative w-full">
               {SKILL_ZONES.map((zone) => (
                 <div
@@ -321,42 +321,42 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
                   className="skill-content absolute top-1/2 -translate-y-1/2 left-0 right-0 will-change-transform will-change-opacity"
                 >
                   {/* TOP NUMERIC HUD COUNTER */}
-                  <div className="flex items-baseline gap-2 mb-3 md:mb-4">
+                  <div className="flex items-baseline gap-2 mb-1.5 sm:mb-4">
                     <span
-                      className={`text-4xl md:text-6xl font-black font-mono tracking-tighter ${primaryTextClass}`}
+                      className={`text-2xl sm:text-4xl md:text-6xl font-black font-mono tracking-tighter ${primaryTextClass}`}
                     >
                       {zone.numberStr}
                     </span>
-                    <span className="text-zinc-500 font-mono text-xl md:text-2xl font-bold">
+                    <span className="text-zinc-500 font-mono text-sm sm:text-xl md:text-2xl font-bold">
                       / 05
                     </span>
                   </div>
 
                   {/* SUB-HEADING & TITLE */}
-                  <div className="flex items-center gap-3 mb-5 md:mb-7">
-                    <span className="font-mono text-xl md:text-3xl font-bold text-zinc-500">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-7">
+                    <span className="font-mono text-xs sm:text-xl md:text-3xl font-bold text-zinc-500 whitespace-nowrap">
                       {zone.numberStr} //
                     </span>
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight leading-none">
+                    <h2 className="text-lg sm:text-3xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight leading-tight">
                       {zone.title}
                     </h2>
                   </div>
 
                   {/* TECH STACK MATTE CARDS */}
-                  <div className="flex flex-wrap items-center gap-2.5 md:gap-3.5 max-w-2xl">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-3.5 max-w-2xl">
                     {zone.skills.map((skill) => {
                       const SkillIcon = skill.icon;
                       return (
                         <div
                           key={skill.name}
-                          className="px-4 py-2.5 md:px-5 md:py-3 rounded-xl bg-zinc-900/90 border border-zinc-800 flex items-center gap-3 hover:border-zinc-600 transition-all duration-300 group shadow-md"
+                          className="px-2.5 py-1.5 sm:px-4 sm:py-2.5 md:px-5 md:py-3 rounded-lg sm:rounded-xl bg-zinc-900/90 border border-zinc-800 flex items-center gap-2 sm:gap-3 hover:border-zinc-600 transition-all duration-300 group shadow-md"
                         >
-                          <div className="p-1.5 rounded-lg bg-zinc-950 border border-zinc-800 group-hover:scale-105 transition-transform duration-300">
+                          <div className="p-1 sm:p-1.5 rounded-md sm:rounded-lg bg-zinc-950 border border-zinc-800 group-hover:scale-105 transition-transform duration-300">
                             <SkillIcon
-                              className={`w-4 h-4 md:w-5 md:h-5 ${primaryTextClass}`}
+                              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 ${primaryTextClass}`}
                             />
                           </div>
-                          <span className="font-mono text-xs md:text-sm font-semibold text-zinc-200 tracking-wide">
+                          <span className="font-mono text-[10px] sm:text-xs md:text-sm font-semibold text-zinc-200 tracking-wide whitespace-nowrap">
                             {skill.name}
                           </span>
                         </div>
@@ -369,9 +369,9 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           </div>
 
           {/* RIGHT PANEL: 360-DEGREE ROTATING WHEEL SELECTOR */}
-          <div className="lg:col-span-5 relative flex items-center justify-center h-[340px] md:h-[450px] w-full">
+          <div className="lg:col-span-5 relative flex items-center justify-center h-[240px] sm:h-[340px] md:h-[450px] w-full mt-2 sm:mt-0">
             {/* MAIN ROTATING RING */}
-            <div className="wheel-ring absolute w-[300px] h-[300px] md:w-[380px] md:h-[380px] rounded-full border border-zinc-800 will-change-transform [--ring-radius:150px] md:[--ring-radius:190px]">
+            <div className="wheel-ring absolute w-[210px] h-[210px] sm:w-[300px] sm:h-[300px] md:w-[380px] md:h-[380px] rounded-full border border-zinc-800 will-change-transform [--ring-radius:105px] sm:[--ring-radius:150px] md:[--ring-radius:190px]">
               {SKILL_ZONES.map((zone, i) => {
                 const rotation = i * (360 / SKILL_ZONES.length);
                 const ZoneIcon = zone.icon;
@@ -379,9 +379,9 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
                 return (
                   <div
                     key={`node-${zone.id}`}
-                    className="node-wrapper absolute top-1/2 left-1/2 w-14 h-14 md:w-16 md:h-16 -mt-7 -ml-7 md:-mt-8 md:-ml-8 will-change-transform will-change-opacity"
+                    className="node-wrapper absolute top-1/2 left-1/2 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 -mt-5 -ml-5 sm:-mt-7 sm:-ml-7 md:-mt-8 md:-ml-8 will-change-transform will-change-opacity cursor-pointer pointer-events-auto"
                     style={{
-                      transform: `rotate(${rotation}deg) translateX(calc(-1 * var(--ring-radius, 150px))) rotate(${-rotation}deg)`,
+                      transform: `rotate(${rotation}deg) translateX(calc(-1 * var(--ring-radius, 105px))) rotate(${-rotation}deg)`,
                     }}
                   >
                     <div
@@ -392,7 +392,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
                       }`}
                     >
                       <ZoneIcon
-                        className={`w-5 h-5 md:h-6 md:w-6 ${
+                        className={`w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6 ${
                           i === 0 ? 'text-white' : 'text-zinc-500'
                         }`}
                       />
@@ -404,23 +404,23 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
 
             {/* CENTER HUB */}
             <div
-              className={`absolute z-20 w-28 h-28 md:w-36 md:h-36 rounded-full bg-zinc-950 flex items-center justify-center flex-col border shadow-xl ${
+              className={`absolute z-20 w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36 rounded-full bg-zinc-950 flex items-center justify-center flex-col border shadow-xl ${
                 isRed ? 'border-red-500/50' : 'border-blue-600/50'
               }`}
             >
-              <div className="relative w-full h-10 md:h-12 overflow-hidden flex items-center justify-center mb-0.5">
+              <div className="relative w-full h-7 sm:h-10 md:h-12 overflow-hidden flex items-center justify-center mb-0.5">
                 {SKILL_ZONES.map((zone) => (
                   <span
                     key={`hub-${zone.id}`}
-                    className={`hub-number absolute text-3xl md:text-5xl font-black ${primaryTextClass} will-change-transform will-change-opacity`}
+                    className={`hub-number absolute text-xl sm:text-3xl md:text-5xl font-black ${primaryTextClass} will-change-transform will-change-opacity`}
                   >
                     {zone.numberStr}
                   </span>
                 ))}
               </div>
 
-              <div className="w-6 md:w-8 h-[1px] bg-zinc-800 mb-0.5" />
-              <span className="font-mono text-[10px] md:text-xs text-zinc-500 tracking-widest font-bold">
+              <div className="w-5 sm:w-6 md:w-8 h-[1px] bg-zinc-800 mb-0.5" />
+              <span className="font-mono text-[9px] sm:text-[10px] md:text-xs text-zinc-500 tracking-widest font-bold">
                 05
               </span>
             </div>
@@ -428,7 +428,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
         </div>
 
         {/* BOTTOM SCROLL INDICATOR */}
-        <div className="absolute bottom-6 md:bottom-8 left-6 md:left-12 lg:left-16 flex items-center gap-3 opacity-60 z-20">
+        <div className="hidden sm:flex absolute bottom-6 md:bottom-8 left-6 md:left-12 lg:left-16 items-center gap-3 opacity-60 z-20">
           <div className={`w-8 h-[2px] ${primaryBgClass}`} />
           <span className="font-mono text-[10px] md:text-xs text-zinc-400 tracking-[0.3em] uppercase font-semibold">
             SCROLL TO CYCLE THROUGH ZONES
