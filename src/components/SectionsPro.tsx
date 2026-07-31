@@ -246,10 +246,10 @@ export default function SectionsPro({
           <img
             src={activeImage}
             alt={mainHeading}
-            className="w-full h-full object-cover object-center filter brightness-[0.45] contrast-[1.1]"
+            className="w-full h-full object-cover object-center filter brightness-[0.5] contrast-[1.15]"
           />
           {/* Subtle Dark Vignette & Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-black/80" />
+          <div className={`absolute inset-0 bg-gradient-to-t ${isRed ? 'from-black via-black/50 to-red-950/30' : 'from-black via-black/50 to-blue-950/30'}`} />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-black/40 to-black" />
         </div>
 
@@ -273,7 +273,9 @@ export default function SectionsPro({
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
-              filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.8))',
+              filter: isRed
+                ? 'drop-shadow(0 0 35px rgba(239, 68, 68, 0.45)) drop-shadow(0 20px 30px rgba(0,0,0,0.9))'
+                : 'drop-shadow(0 0 35px rgba(0, 68, 255, 0.45)) drop-shadow(0 20px 30px rgba(0,0,0,0.9))',
               textShadow: '0 0 1px rgba(255,255,255,0.1)',
             }}
           >

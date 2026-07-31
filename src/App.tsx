@@ -13,23 +13,42 @@ import Contact from './components/Contact';
 import ScrollSideNav from './components/ScrollSideNav';
 import SectionsPro from './components/SectionsPro';
 
-import revealAboutImg from './assets/sections_pro/reveal_about.png';
-import revealExperienceImg from './assets/sections_pro/reveal_experience.png';
-import revealSkillsImg from './assets/sections_pro/reveal_skills.png';
-import revealWorksImg from './assets/sections_pro/reveal_works.png';
-import revealContactImg from './assets/sections_pro/reveal_contact.png';
+import revealAboutRed from './assets/sections_pro/reveal_about_red.png';
+import revealAboutBlue from './assets/sections_pro/reveal_about_blue.png';
+import revealExperienceRed from './assets/sections_pro/reveal_experience_red.png';
+import revealExperienceBlue from './assets/sections_pro/reveal_experience_blue.png';
+import revealSkillsRed from './assets/sections_pro/reveal_skills_red.png';
+import revealSkillsBlue from './assets/sections_pro/reveal_skills_blue.png';
+import revealWorksRed from './assets/sections_pro/reveal_works_red.png';
+import revealWorksBlue from './assets/sections_pro/reveal_works_blue.png';
+import revealContactRed from './assets/sections_pro/reveal_contact_red.png';
+import revealContactBlue from './assets/sections_pro/reveal_contact_blue.png';
 import heroRedPill from './assets/Hero-RedPill.png';
 import heroBluePill from './assets/Hero-BluePill.png';
 
 function App() {
   const [theme, setTheme] = useState<'selection' | 'red' | 'blue'>('selection');
 
-  // Preload high-res hero images in background memory
+  // Preload high-res hero and reveal images in background memory
   useEffect(() => {
-    const imgRed = new Image();
-    imgRed.src = heroRedPill;
-    const imgBlue = new Image();
-    imgBlue.src = heroBluePill;
+    const imagesToPreload = [
+      heroRedPill,
+      heroBluePill,
+      revealAboutRed,
+      revealAboutBlue,
+      revealExperienceRed,
+      revealExperienceBlue,
+      revealSkillsRed,
+      revealSkillsBlue,
+      revealWorksRed,
+      revealWorksBlue,
+      revealContactRed,
+      revealContactBlue,
+    ];
+    imagesToPreload.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
   }, []);
 
   useEffect(() => {
@@ -67,6 +86,13 @@ function App() {
   if (theme === 'selection') {
     return <SelectionScreen onSelect={setTheme} />;
   }
+
+  const isRed = theme === 'red';
+  const revealAboutImg = isRed ? revealAboutRed : revealAboutBlue;
+  const revealExperienceImg = isRed ? revealExperienceRed : revealExperienceBlue;
+  const revealSkillsImg = isRed ? revealSkillsRed : revealSkillsBlue;
+  const revealWorksImg = isRed ? revealWorksRed : revealWorksBlue;
+  const revealContactImg = isRed ? revealContactRed : revealContactBlue;
 
   return (
     <main className={`min-h-screen w-full flex flex-col bg-background relative overflow-hidden ${theme === 'red' ? 'theme-red' : 'theme-blue'}`}>
