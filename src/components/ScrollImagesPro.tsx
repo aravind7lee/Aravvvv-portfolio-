@@ -285,15 +285,15 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
           ))}
         </div>
 
-        {/* Bottom Navigation & Thumbnail Strip */}
+        {/* Bottom Navigation Controls */}
         <div className="relative z-50 w-full max-w-7xl mx-auto flex items-center justify-between border-t border-white/10 pt-2.5 sm:pt-4 pointer-events-auto">
-          {/* Thumbnail Carousel / Quick Touch Navigation */}
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-[220px] sm:max-w-none no-scrollbar">
+          {/* Thumbnail Carousel (Visible on sm+ screens to prevent mobile scrollbar overflow) */}
+          <div className="hidden sm:flex items-center gap-2">
             {items.map((it, idx) => (
               <button
                 key={it.id}
                 onClick={() => setSlide(idx)}
-                className={`group relative h-8 w-12 sm:h-10 sm:w-16 md:w-20 rounded-md sm:rounded-lg overflow-hidden border transition-all duration-300 flex-shrink-0 ${
+                className={`group relative h-10 w-16 md:w-20 rounded-lg overflow-hidden border transition-all duration-300 ${
                   idx === activeIndex
                     ? `${primaryBorderColor} ring-1 ring-white/40 scale-105`
                     : 'border-white/15 opacity-40 hover:opacity-100 hover:border-white/40'
@@ -308,15 +308,15 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
                 ) : (
                   <div className="w-full h-full bg-zinc-900" />
                 )}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center font-mono text-[9px] sm:text-[10px] font-bold text-white">
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center font-mono text-[10px] font-bold text-white">
                   0{idx + 1}
                 </div>
               </button>
             ))}
           </div>
 
-          {/* Arrow Navigation Controls */}
-          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
+          {/* Arrow Navigation Controls (Centered on mobile phones) */}
+          <div className="flex items-center gap-2.5 sm:gap-3 mx-auto sm:ml-auto">
             <button
               type="button"
               onClick={(e) => {
@@ -325,7 +325,7 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
                 setSlide(activeIndex - 1);
               }}
               disabled={activeIndex === 0}
-              className={`p-2 sm:p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
+              className={`p-2.5 sm:p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
                 activeIndex === 0
                   ? 'opacity-20 cursor-not-allowed'
                   : 'hover:bg-white/20 hover:scale-105 active:scale-95 cursor-pointer shadow-md'
@@ -335,7 +335,7 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
               <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
 
-            <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-black border border-white/20 flex items-center gap-1.5 sm:gap-2 font-mono text-xs font-bold text-white shadow-md select-none">
+            <div className="px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full bg-black border border-white/20 flex items-center gap-1.5 sm:gap-2 font-mono text-xs font-bold text-white shadow-md select-none">
               <span className={primaryTextColor}>0{activeIndex + 1}</span>
               <span className="text-white/30">/</span>
               <span className="text-white/70">0{items.length}</span>
@@ -349,7 +349,7 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
                 setSlide(activeIndex + 1);
               }}
               disabled={activeIndex === items.length - 1}
-              className={`p-2 sm:p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
+              className={`p-2.5 sm:p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
                 activeIndex === items.length - 1
                   ? 'opacity-20 cursor-not-allowed'
                   : 'hover:bg-white/20 hover:scale-105 active:scale-95 cursor-pointer shadow-md'
