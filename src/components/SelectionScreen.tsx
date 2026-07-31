@@ -19,7 +19,18 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   // Audio references for official GTA San Andreas game sound effects
   const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
   const selectAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const audioUnlockedRef = useRef<boolean>(false);
+
+  const getAudioCtx = () => {
+    if (!audioCtxRef.current) {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (AudioCtx) {
+        audioCtxRef.current = new AudioCtx();
+      }
+    }
+    return audioCtxRef.current;
+  };
 
   useEffect(() => {
     // Standard HTML5 Audio elements
@@ -32,55 +43,82 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     hoverAudioRef.current = hoverAudio;
     selectAudioRef.current = selectAudio;
 
-    // Instant unlocker on first user interaction anywhere on document
+    // Global unlocker on user gesture anywhere on window
     const unlockAllAudio = () => {
-      if (audioUnlockedRef.current) return;
-      audioUnlockedRef.current = true;
-
-      if (hoverAudioRef.current) {
-        hoverAudioRef.current.play().then(() => {
-          hoverAudioRef.current?.pause();
-          if (hoverAudioRef.current) hoverAudioRef.current.currentTime = 0;
-        }).catch(() => {});
+      const ctx = getAudioCtx();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
       }
-      if (selectAudioRef.current) {
-        selectAudioRef.current.play().then(() => {
-          selectAudioRef.current?.pause();
-          if (selectAudioRef.current) selectAudioRef.current.currentTime = 0;
-        }).catch(() => {});
+
+      if (!audioUnlockedRef.current) {
+        audioUnlockedRef.current = true;
+        if (hoverAudioRef.current) {
+          hoverAudioRef.current.play().then(() => {
+            hoverAudioRef.current?.pause();
+            if (hoverAudioRef.current) hoverAudioRef.current.currentTime = 0;
+          }).catch(() => {});
+        }
+        if (selectAudioRef.current) {
+          selectAudioRef.current.play().then(() => {
+            selectAudioRef.current?.pause();
+            if (selectAudioRef.current) selectAudioRef.current.currentTime = 0;
+          }).catch(() => {});
+        }
       }
     };
 
+    window.addEventListener('pointerdown', unlockAllAudio, { capture: true, passive: true });
+    window.addEventListener('touchstart', unlockAllAudio, { capture: true, passive: true });
+    window.addEventListener('click', unlockAllAudio, { capture: true, passive: true });
     window.addEventListener('pointermove', unlockAllAudio, { passive: true });
     window.addEventListener('mousemove', unlockAllAudio, { passive: true });
-    window.addEventListener('touchstart', unlockAllAudio, { passive: true });
     window.addEventListener('keydown', unlockAllAudio, { passive: true });
-    window.addEventListener('mouseenter', unlockAllAudio, { passive: true });
-    window.addEventListener('click', unlockAllAudio, { passive: true });
 
     return () => {
+      window.removeEventListener('pointerdown', unlockAllAudio, { capture: true });
+      window.removeEventListener('touchstart', unlockAllAudio, { capture: true });
+      window.removeEventListener('click', unlockAllAudio, { capture: true });
       window.removeEventListener('pointermove', unlockAllAudio);
       window.removeEventListener('mousemove', unlockAllAudio);
-      window.removeEventListener('touchstart', unlockAllAudio);
       window.removeEventListener('keydown', unlockAllAudio);
-      window.removeEventListener('mouseenter', unlockAllAudio);
-      window.removeEventListener('click', unlockAllAudio);
     };
   }, []);
 
   const playSanAndreasHoverFX = (_isRed: boolean) => {
     if (!soundEnabled) return;
     try {
+      const ctx = getAudioCtx();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+
       if (hoverAudioRef.current) {
         hoverAudioRef.current.currentTime = 0;
         hoverAudioRef.current.volume = 0.95;
-        hoverAudioRef.current.play().catch(() => {
-          const clone = hoverAudioRef.current?.cloneNode() as HTMLAudioElement;
-          if (clone) {
-            clone.volume = 0.95;
-            clone.play().catch(() => {});
-          }
-        });
+        const playPromise = hoverAudioRef.current.play();
+
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Synthesizer failover if browser blocked HTML5 Audio on initial zero-interaction hover
+            if (ctx) {
+              const now = ctx.currentTime;
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'square';
+              osc.frequency.setValueAtTime(783.99, now); // G5
+              osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.035); // D6
+
+              gain.gain.setValueAtTime(0.12, now);
+              gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+
+              osc.start(now);
+              osc.stop(now + 0.05);
+            }
+          });
+        }
       }
     } catch {
       // Audio failover
@@ -90,6 +128,11 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const playSanAndreasSelectFX = (_choice: 'blue' | 'red') => {
     if (!soundEnabled) return;
     try {
+      const ctx = getAudioCtx();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+
       if (selectAudioRef.current) {
         selectAudioRef.current.currentTime = 0;
         selectAudioRef.current.volume = 1.0;
