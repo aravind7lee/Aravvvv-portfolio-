@@ -13,6 +13,7 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [timeStr, setTimeStr] = useState<string>('');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
+  const [isAudioUnlocked, setIsAudioUnlocked] = useState<boolean>(false);
   const [transitioning, setTransitioning] = useState<'none' | 'red' | 'blue'>('none');
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -20,7 +21,6 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
   const selectAudioRef = useRef<HTMLAudioElement | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const audioUnlockedRef = useRef<boolean>(false);
 
   const getAudioCtx = () => {
     if (!audioCtxRef.current) {
@@ -30,6 +30,27 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
       }
     }
     return audioCtxRef.current;
+  };
+
+  const unlockAllAudio = () => {
+    setIsAudioUnlocked(true);
+    const ctx = getAudioCtx();
+    if (ctx && ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
+
+    if (hoverAudioRef.current) {
+      hoverAudioRef.current.play().then(() => {
+        hoverAudioRef.current?.pause();
+        if (hoverAudioRef.current) hoverAudioRef.current.currentTime = 0;
+      }).catch(() => {});
+    }
+    if (selectAudioRef.current) {
+      selectAudioRef.current.play().then(() => {
+        selectAudioRef.current?.pause();
+        if (selectAudioRef.current) selectAudioRef.current.currentTime = 0;
+      }).catch(() => {});
+    }
   };
 
   useEffect(() => {
@@ -43,50 +64,30 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     hoverAudioRef.current = hoverAudio;
     selectAudioRef.current = selectAudio;
 
-    // Global unlocker on user gesture anywhere on window
-    const unlockAllAudio = () => {
-      const ctx = getAudioCtx();
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume().catch(() => {});
-      }
-
-      if (!audioUnlockedRef.current) {
-        audioUnlockedRef.current = true;
-        if (hoverAudioRef.current) {
-          hoverAudioRef.current.play().then(() => {
-            hoverAudioRef.current?.pause();
-            if (hoverAudioRef.current) hoverAudioRef.current.currentTime = 0;
-          }).catch(() => {});
-        }
-        if (selectAudioRef.current) {
-          selectAudioRef.current.play().then(() => {
-            selectAudioRef.current?.pause();
-            if (selectAudioRef.current) selectAudioRef.current.currentTime = 0;
-          }).catch(() => {});
-        }
-      }
+    const handleInitialUserGesture = () => {
+      unlockAllAudio();
     };
 
-    window.addEventListener('pointerdown', unlockAllAudio, { capture: true, passive: true });
-    window.addEventListener('touchstart', unlockAllAudio, { capture: true, passive: true });
-    window.addEventListener('click', unlockAllAudio, { capture: true, passive: true });
-    window.addEventListener('pointermove', unlockAllAudio, { passive: true });
-    window.addEventListener('mousemove', unlockAllAudio, { passive: true });
-    window.addEventListener('keydown', unlockAllAudio, { passive: true });
+    window.addEventListener('pointerdown', handleInitialUserGesture, { capture: true, passive: true });
+    window.addEventListener('touchstart', handleInitialUserGesture, { capture: true, passive: true });
+    window.addEventListener('click', handleInitialUserGesture, { capture: true, passive: true });
+    window.addEventListener('keydown', handleInitialUserGesture, { passive: true });
 
     return () => {
-      window.removeEventListener('pointerdown', unlockAllAudio, { capture: true });
-      window.removeEventListener('touchstart', unlockAllAudio, { capture: true });
-      window.removeEventListener('click', unlockAllAudio, { capture: true });
-      window.removeEventListener('pointermove', unlockAllAudio);
-      window.removeEventListener('mousemove', unlockAllAudio);
-      window.removeEventListener('keydown', unlockAllAudio);
+      window.removeEventListener('pointerdown', handleInitialUserGesture, { capture: true });
+      window.removeEventListener('touchstart', handleInitialUserGesture, { capture: true });
+      window.removeEventListener('click', handleInitialUserGesture, { capture: true });
+      window.removeEventListener('keydown', handleInitialUserGesture);
     };
   }, []);
 
   const playSanAndreasHoverFX = (_isRed: boolean) => {
     if (!soundEnabled) return;
     try {
+      if (!isAudioUnlocked) {
+        unlockAllAudio();
+      }
+
       const ctx = getAudioCtx();
       if (ctx && ctx.state === 'suspended') {
         ctx.resume().catch(() => {});
@@ -99,7 +100,7 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
 
         if (playPromise !== undefined) {
           playPromise.catch(() => {
-            // Synthesizer failover if browser blocked HTML5 Audio on initial zero-interaction hover
+            // Synthesizer failover if browser blocked HTML5 Audio
             if (ctx) {
               const now = ctx.currentTime;
               const osc = ctx.createOscillator();
@@ -128,6 +129,10 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const playSanAndreasSelectFX = (_choice: 'blue' | 'red') => {
     if (!soundEnabled) return;
     try {
+      if (!isAudioUnlocked) {
+        unlockAllAudio();
+      }
+
       const ctx = getAudioCtx();
       if (ctx && ctx.state === 'suspended') {
         ctx.resume().catch(() => {});
@@ -471,11 +476,22 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
           </span>
           <div className="w-[1px] h-3 bg-zinc-800 hidden sm:block" />
           <button
-            onClick={() => setSoundEnabled(!soundEnabled)}
+            onClick={() => {
+              if (!isAudioUnlocked) {
+                unlockAllAudio();
+              } else {
+                setSoundEnabled(!soundEnabled);
+              }
+            }}
             className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors cursor-pointer"
             title="Toggle Sound Effects"
           >
-            {soundEnabled ? (
+            {!isAudioUnlocked ? (
+              <>
+                <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
+                <span className="text-emerald-400 font-bold text-[8.5px] sm:text-[10px] animate-pulse">ENABLE GTA SOUNDS</span>
+              </>
+            ) : soundEnabled ? (
               <>
                 <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="text-emerald-400 font-bold text-[8.5px] sm:text-[10px]">AUDIO ON</span>
