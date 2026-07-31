@@ -105,18 +105,18 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
       {/* Pinned Viewport Frame */}
       <div
         ref={pinRef}
-        className="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden bg-black pt-14 pb-6 sm:py-8 px-4 md:px-12 z-10"
+        className="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden bg-black pt-14 sm:pt-16 md:pt-8 pb-4 sm:py-8 px-4 md:px-12 z-10 select-none"
       >
         {/* Clean Editorial Section Header (No Gradients or Neon Glows) */}
-        <div className="relative z-30 w-full flex items-center justify-between border-b border-white/10 pb-4 max-w-7xl mx-auto">
-          <div className="flex items-center gap-3">
+        <div className="relative z-30 w-full flex items-center justify-between border-b border-white/10 pb-2.5 sm:pb-4 max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 sm:gap-3">
             <span className={`w-2 h-2 rounded-full ${primaryBgColor}`} />
-            <span className="font-mono text-xs font-bold tracking-widest text-white/80 uppercase">
+            <span className="font-mono text-[10px] sm:text-xs font-bold tracking-wider sm:tracking-widest text-white/80 uppercase whitespace-nowrap">
               SELECTED WORKS / 0{activeIndex + 1}
             </span>
           </div>
 
-          <h2 className="text-xl md:text-3xl font-extrabold tracking-tight text-white uppercase font-sans">
+          <h2 className="hidden sm:block text-xl md:text-3xl font-extrabold tracking-tight text-white uppercase font-sans whitespace-nowrap">
             FEATURED <span className={primaryTextColor}>WORKS</span>
           </h2>
 
@@ -135,18 +135,18 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
               ref={imageRef}
               src={activeItem.image}
               alt={activeItem.title}
-              className="w-full h-full object-cover object-center filter brightness-[0.35] contrast-[1.05]"
+              className="w-full h-full object-cover object-center filter brightness-[0.25] sm:brightness-[0.35] contrast-[1.05]"
             />
           ) : (
             <div className="w-full h-full bg-zinc-950" />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/90" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/90" />
         </div>
 
-        {/* Giant Watermark Typography (Clean Subtle Stroke, No Neon Dropshadow) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-10">
+        {/* Giant Watermark Typography (Hidden on mobile to avoid text collisions) */}
+        <div className="hidden md:flex absolute inset-0 items-center justify-center pointer-events-none overflow-hidden z-10">
           <h1
-            className="text-[24vw] md:text-[20vw] font-black leading-none uppercase select-none opacity-80 text-white/5 [-webkit-text-stroke:1px_rgba(255,255,255,0.08)]"
+            className="text-[20vw] font-black leading-none uppercase select-none opacity-80 text-white/5 [-webkit-text-stroke:1px_rgba(255,255,255,0.08)] whitespace-nowrap"
           >
             {activeItem.giantTitle}
           </h1>
@@ -155,59 +155,80 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
         {/* Showcase Layout */}
         <div
           ref={cardRef}
-          className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center my-auto py-2"
+          className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 items-center my-auto py-1 sm:py-2"
         >
           {/* Left Column: Project Details */}
-          <div className="lg:col-span-6 space-y-4 md:space-y-5">
-            <div className="flex items-center gap-3">
+          <div className="lg:col-span-6 space-y-2.5 sm:space-y-4 md:space-y-5">
+            <div className="flex items-center gap-2 sm:gap-3">
               <span
-                className={`px-3 py-1 rounded-full text-xs font-mono font-bold border flex items-center gap-2 bg-black/90 ${primaryTextColor} ${primaryBorderColor}`}
+                className={`px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[10px] sm:text-xs font-mono font-bold border flex items-center gap-1.5 sm:gap-2 bg-black/90 ${primaryTextColor} ${primaryBorderColor}`}
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 <span>PROJECT 0{activeIndex + 1}</span>
               </span>
-              <span className="h-[1px] w-8 bg-white/20" />
-              <span className="text-xs font-mono text-white/60 tracking-widest uppercase">
+              <span className="h-[1px] w-6 sm:w-8 bg-white/20" />
+              <span className="text-[10px] sm:text-xs font-mono text-white/60 tracking-widest uppercase truncate">
                 {activeItem.title}
               </span>
             </div>
 
             <h3
               ref={titleRef}
-              className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-[1.05] tracking-tight uppercase font-sans"
+              className="text-lg sm:text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight tracking-tight uppercase font-sans"
             >
               {activeItem.heading}
             </h3>
 
-            <div className="flex flex-wrap gap-2 pt-0.5">
+            {/* Mobile Project Screenshot Card (Visible on mobile screens) */}
+            <div className="block lg:hidden w-full my-2">
+              <div
+                className={`relative rounded-xl overflow-hidden border p-1 sm:p-2 bg-zinc-950/90 shadow-xl transition-all duration-300 ${primaryBorderColor}`}
+              >
+                <div className="relative aspect-[16/9] rounded-lg overflow-hidden bg-black max-h-[160px] sm:max-h-[220px]">
+                  {activeItem.image ? (
+                    <img
+                      src={activeItem.image}
+                      alt={activeItem.heading}
+                      className="w-full h-full object-cover object-top"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
+                      <span className="font-mono text-[10px] text-zinc-600 tracking-widest uppercase">PREVIEW</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-0.5">
               {activeItem.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 rounded-md text-[11px] font-mono font-semibold bg-zinc-900 text-white/90 border border-white/15"
+                  className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-md text-[10px] sm:text-[11px] font-mono font-semibold bg-zinc-900 text-white/90 border border-white/15"
                 >
                   {tag}
                 </span>
               ))}
             </div>
 
-            <p className="text-xs md:text-sm text-gray-300 font-sans leading-relaxed line-clamp-3 md:line-clamp-5 bg-zinc-950 p-5 rounded-2xl border border-white/10 shadow-xl">
+            <p className="text-[11px] sm:text-xs md:text-sm text-gray-300 font-sans leading-relaxed line-clamp-3 md:line-clamp-5 bg-zinc-950/90 p-3 sm:p-5 rounded-xl sm:rounded-2xl border border-white/10 shadow-xl">
               {activeItem.description}
             </p>
 
-            <div className="pt-2">
+            <div className="pt-1 sm:pt-2">
               <a
                 href={activeItem.link || '#'}
                 target={activeItem.link ? '_blank' : '_self'}
                 rel="noreferrer"
-                className={`group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-mono text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 ${buttonStyle}`}
+                className={`group inline-flex items-center gap-2 px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-full font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105 ${buttonStyle}`}
               >
                 <span>EXPLORE PROJECT</span>
-                <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
             </div>
           </div>
 
-          {/* Right Column: Screenshot Card (Clean Border, No Glowing Box Shadow) */}
+          {/* Right Column: Desktop Screenshot Card */}
           <div className="lg:col-span-6 hidden lg:block">
             <div
               className={`relative rounded-2xl overflow-hidden border p-2 bg-zinc-950 shadow-2xl transition-all duration-300 group ${primaryBorderColor}`}
@@ -234,8 +255,8 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
           </div>
         </div>
 
-        {/* Side Rail Navigation Dots */}
-        <div className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-40 flex flex-col items-center gap-3 pointer-events-auto">
+        {/* Side Rail Navigation Dots (Hidden on mobile to prevent text collisions) */}
+        <div className="hidden md:flex absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-40 flex-col items-center gap-3 pointer-events-auto">
           <div className="w-[2px] h-24 bg-white/15 rounded-full relative overflow-hidden">
             <div
               className={`w-full transition-all duration-300 ${primaryBgColor}`}
@@ -264,15 +285,15 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
           ))}
         </div>
 
-        {/* Bottom Navigation & Thumbnail Strip (Clean Non-Glow Styling) */}
-        <div className="relative z-50 w-full max-w-7xl mx-auto flex items-center justify-between border-t border-white/10 pt-4 pointer-events-auto">
-          {/* Thumbnail Carousel */}
-          <div className="hidden sm:flex items-center gap-2">
+        {/* Bottom Navigation & Thumbnail Strip */}
+        <div className="relative z-50 w-full max-w-7xl mx-auto flex items-center justify-between border-t border-white/10 pt-2.5 sm:pt-4 pointer-events-auto">
+          {/* Thumbnail Carousel / Quick Touch Navigation */}
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-[220px] sm:max-w-none no-scrollbar">
             {items.map((it, idx) => (
               <button
                 key={it.id}
                 onClick={() => setSlide(idx)}
-                className={`group relative h-10 w-16 md:w-20 rounded-lg overflow-hidden border transition-all duration-300 ${
+                className={`group relative h-8 w-12 sm:h-10 sm:w-16 md:w-20 rounded-md sm:rounded-lg overflow-hidden border transition-all duration-300 flex-shrink-0 ${
                   idx === activeIndex
                     ? `${primaryBorderColor} ring-1 ring-white/40 scale-105`
                     : 'border-white/15 opacity-40 hover:opacity-100 hover:border-white/40'
@@ -287,7 +308,7 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
                 ) : (
                   <div className="w-full h-full bg-zinc-900" />
                 )}
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center font-mono text-[10px] font-bold text-white">
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center font-mono text-[9px] sm:text-[10px] font-bold text-white">
                   0{idx + 1}
                 </div>
               </button>
@@ -295,7 +316,7 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
           </div>
 
           {/* Arrow Navigation Controls */}
-          <div className="flex items-center gap-3 ml-auto">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto">
             <button
               type="button"
               onClick={(e) => {
@@ -304,17 +325,17 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
                 setSlide(activeIndex - 1);
               }}
               disabled={activeIndex === 0}
-              className={`p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
+              className={`p-2 sm:p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
                 activeIndex === 0
                   ? 'opacity-20 cursor-not-allowed'
                   : 'hover:bg-white/20 hover:scale-105 active:scale-95 cursor-pointer shadow-md'
               }`}
               aria-label="Previous Project"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
 
-            <div className="px-4 py-2 rounded-full bg-black border border-white/20 flex items-center gap-2 font-mono text-xs font-bold text-white shadow-md select-none">
+            <div className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-black border border-white/20 flex items-center gap-1.5 sm:gap-2 font-mono text-xs font-bold text-white shadow-md select-none">
               <span className={primaryTextColor}>0{activeIndex + 1}</span>
               <span className="text-white/30">/</span>
               <span className="text-white/70">0{items.length}</span>
@@ -328,14 +349,14 @@ export default function ScrollImagesPro({ items, theme = 'red' }: ScrollImagesPr
                 setSlide(activeIndex + 1);
               }}
               disabled={activeIndex === items.length - 1}
-              className={`p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
+              className={`p-2 sm:p-3 rounded-full border border-white/20 bg-black text-white transition-all duration-300 ${
                 activeIndex === items.length - 1
                   ? 'opacity-20 cursor-not-allowed'
                   : 'hover:bg-white/20 hover:scale-105 active:scale-95 cursor-pointer shadow-md'
               }`}
               aria-label="Next Project"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
         </div>
