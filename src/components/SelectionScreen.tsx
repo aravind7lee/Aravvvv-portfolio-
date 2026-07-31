@@ -19,25 +19,68 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   // Audio references for official GTA San Andreas game sound effects
   const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
   const selectAudioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUnlockedRef = useRef<boolean>(false);
 
   useEffect(() => {
-    hoverAudioRef.current = new Audio(gtaMenuHoverMp3);
-    selectAudioRef.current = new Audio(gtaRespectMp3);
+    // Standard HTML5 Audio elements
+    const hoverAudio = new Audio(gtaMenuHoverMp3);
+    const selectAudio = new Audio(gtaRespectMp3);
 
-    [hoverAudioRef.current, selectAudioRef.current].forEach((audio) => {
-      if (audio) {
-        audio.preload = 'auto';
+    hoverAudio.preload = 'auto';
+    selectAudio.preload = 'auto';
+
+    hoverAudioRef.current = hoverAudio;
+    selectAudioRef.current = selectAudio;
+
+    // Instant unlocker on first user interaction anywhere on document
+    const unlockAllAudio = () => {
+      if (audioUnlockedRef.current) return;
+      audioUnlockedRef.current = true;
+
+      if (hoverAudioRef.current) {
+        hoverAudioRef.current.play().then(() => {
+          hoverAudioRef.current?.pause();
+          if (hoverAudioRef.current) hoverAudioRef.current.currentTime = 0;
+        }).catch(() => {});
       }
-    });
+      if (selectAudioRef.current) {
+        selectAudioRef.current.play().then(() => {
+          selectAudioRef.current?.pause();
+          if (selectAudioRef.current) selectAudioRef.current.currentTime = 0;
+        }).catch(() => {});
+      }
+    };
+
+    window.addEventListener('pointermove', unlockAllAudio, { passive: true });
+    window.addEventListener('mousemove', unlockAllAudio, { passive: true });
+    window.addEventListener('touchstart', unlockAllAudio, { passive: true });
+    window.addEventListener('keydown', unlockAllAudio, { passive: true });
+    window.addEventListener('mouseenter', unlockAllAudio, { passive: true });
+    window.addEventListener('click', unlockAllAudio, { passive: true });
+
+    return () => {
+      window.removeEventListener('pointermove', unlockAllAudio);
+      window.removeEventListener('mousemove', unlockAllAudio);
+      window.removeEventListener('touchstart', unlockAllAudio);
+      window.removeEventListener('keydown', unlockAllAudio);
+      window.removeEventListener('mouseenter', unlockAllAudio);
+      window.removeEventListener('click', unlockAllAudio);
+    };
   }, []);
 
   const playSanAndreasHoverFX = (_isRed: boolean) => {
     if (!soundEnabled) return;
     try {
       if (hoverAudioRef.current) {
-        const audio = hoverAudioRef.current.cloneNode() as HTMLAudioElement;
-        audio.volume = 0.9;
-        audio.play().catch(() => {});
+        hoverAudioRef.current.currentTime = 0;
+        hoverAudioRef.current.volume = 0.95;
+        hoverAudioRef.current.play().catch(() => {
+          const clone = hoverAudioRef.current?.cloneNode() as HTMLAudioElement;
+          if (clone) {
+            clone.volume = 0.95;
+            clone.play().catch(() => {});
+          }
+        });
       }
     } catch {
       // Audio failover
@@ -48,9 +91,15 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     if (!soundEnabled) return;
     try {
       if (selectAudioRef.current) {
-        const audio = selectAudioRef.current.cloneNode() as HTMLAudioElement;
-        audio.volume = 1.0;
-        audio.play().catch(() => {});
+        selectAudioRef.current.currentTime = 0;
+        selectAudioRef.current.volume = 1.0;
+        selectAudioRef.current.play().catch(() => {
+          const clone = selectAudioRef.current?.cloneNode() as HTMLAudioElement;
+          if (clone) {
+            clone.volume = 1.0;
+            clone.play().catch(() => {});
+          }
+        });
       }
     } catch {
       // Audio failover
