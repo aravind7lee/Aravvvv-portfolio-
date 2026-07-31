@@ -289,7 +289,7 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
         <div className="inline-flex items-center gap-1.5 sm:gap-2.5 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-zinc-950/95 border border-zinc-800 shadow-2xl mb-1.5 sm:mb-3 max-w-[92vw]">
           <Flame className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-500 animate-pulse shrink-0" />
           <span className="font-mono text-[8.5px] min-[380px]:text-[9.5px] sm:text-[11px] font-bold tracking-[0.12em] sm:tracking-[0.25em] text-zinc-200 uppercase whitespace-nowrap overflow-hidden text-ellipsis">
-            WELCOME TO MY PORTFOLIO // CHOOSE YOUR REALITY
+            WELCOME TO MY PORTFOLIO // SELECT YOUR PROTOCOL
           </span>
           <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400 shrink-0" />
         </div>
@@ -471,7 +471,7 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
         </div>
 
         <div className="hidden md:flex items-center gap-2 text-zinc-500">
-          <span>CHOOSE YOUR REALITY</span>
+          <span>SELECT YOUR PROTOCOL</span>
         </div>
       </div>
     </div>
