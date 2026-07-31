@@ -124,9 +124,6 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
   const isRed = theme === 'red';
   const primaryBgClass = isRed ? 'bg-red-500' : 'bg-blue-600';
   const primaryTextClass = isRed ? 'text-red-500' : 'text-blue-500';
-  const primaryBorderClass = isRed
-    ? 'border-red-500/60 shadow-lg'
-    : 'border-blue-600/60 shadow-lg';
 
   useGSAP(
     () => {
@@ -168,10 +165,30 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
 
       gsap.set('.laser-progress-bar', { top: '0%', force3D: true });
 
-      gsap.set('.wheel-ring', { rotation: 0, force3D: true });
-      gsap.set('.wheel-icon', { rotation: 0, force3D: true });
+      // Initial active vs inactive node styles
+      const activeBorder = isRed ? '#ef4444' : '#3b82f6';
+      const activeBg = isRed ? 'rgba(239, 68, 68, 0.25)' : 'rgba(59, 130, 246, 0.25)';
+      const activeShadow = isRed ? '0 0 25px rgba(239, 68, 68, 0.85)' : '0 0 25px rgba(59, 130, 246, 0.85)';
 
-      // Inactive node state
+      const inactiveBorder = '#27272a';
+      const inactiveBg = '#09090b';
+      const inactiveShadow = '0 0 0px rgba(0,0,0,0)';
+
+      gsap.set('.wheel-icon-target', {
+        borderColor: inactiveBorder,
+        backgroundColor: inactiveBg,
+        color: '#71717a',
+        boxShadow: inactiveShadow,
+        force3D: true,
+      });
+      gsap.set('.wheel-icon-target:first-child', {
+        borderColor: activeBorder,
+        backgroundColor: activeBg,
+        color: '#ffffff',
+        boxShadow: activeShadow,
+      });
+
+      // Inactive node wrapper state
       gsap.set('.node-wrapper', { opacity: 0.35, scale: 0.85 });
       gsap.set('.node-wrapper:first-child', { opacity: 1, scale: 1.15 });
 
@@ -228,7 +245,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           label
         );
 
-        // F. Active Node Highlight Transition
+        // F. Active Node Highlight & Glowing Color Transition
         tl.to(
           `.node-wrapper:nth-child(${i + 1})`,
           { opacity: 0.35, scale: 0.85, ease: 'none' },
@@ -237,6 +254,30 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
         tl.to(
           `.node-wrapper:nth-child(${i + 2})`,
           { opacity: 1, scale: 1.15, ease: 'none' },
+          label
+        );
+
+        // Dynamic Red / Blue Glowing Color Animation for Active Node Icon
+        tl.to(
+          `.wheel-icon-target:nth-child(${i + 1})`,
+          {
+            borderColor: inactiveBorder,
+            backgroundColor: inactiveBg,
+            color: '#71717a',
+            boxShadow: inactiveShadow,
+            ease: 'none',
+          },
+          label
+        );
+        tl.to(
+          `.wheel-icon-target:nth-child(${i + 2})`,
+          {
+            borderColor: activeBorder,
+            backgroundColor: activeBg,
+            color: '#ffffff',
+            boxShadow: activeShadow,
+            ease: 'none',
+          },
           label
         );
 
@@ -385,17 +426,9 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
                     }}
                   >
                     <div
-                      className={`wheel-icon w-full h-full rounded-full bg-zinc-950 border flex items-center justify-center transition-colors duration-300 ${
-                        i === 0
-                          ? primaryBorderClass
-                          : 'border-zinc-800 hover:border-zinc-600'
-                      }`}
+                      className="wheel-icon wheel-icon-target w-full h-full rounded-full border flex items-center justify-center transition-all duration-300"
                     >
-                      <ZoneIcon
-                        className={`w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6 ${
-                          i === 0 ? 'text-white' : 'text-zinc-500'
-                        }`}
-                      />
+                      <ZoneIcon className="w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6" />
                     </div>
                   </div>
                 );
