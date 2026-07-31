@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -118,6 +118,7 @@ interface SkillsWheelProps {
 }
 
 export default function SkillsWheel({ theme }: SkillsWheelProps) {
+  const [activeZone, setActiveZone] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
 
@@ -165,29 +166,6 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
 
       gsap.set('.laser-progress-bar', { top: '0%', force3D: true });
 
-      // Initial active vs inactive node styles
-      const activeBorder = isRed ? '#ef4444' : '#3b82f6';
-      const activeBg = isRed ? 'rgba(239, 68, 68, 0.25)' : 'rgba(59, 130, 246, 0.25)';
-      const activeShadow = isRed ? '0 0 25px rgba(239, 68, 68, 0.85)' : '0 0 25px rgba(59, 130, 246, 0.85)';
-
-      const inactiveBorder = '#27272a';
-      const inactiveBg = '#09090b';
-      const inactiveShadow = '0 0 0px rgba(0,0,0,0)';
-
-      gsap.set('.wheel-icon-target', {
-        borderColor: inactiveBorder,
-        backgroundColor: inactiveBg,
-        color: '#71717a',
-        boxShadow: inactiveShadow,
-        force3D: true,
-      });
-      gsap.set('.node-wrapper:first-child .wheel-icon-target', {
-        borderColor: activeBorder,
-        backgroundColor: activeBg,
-        color: '#ffffff',
-        boxShadow: activeShadow,
-      });
-
       // Inactive node wrapper state
       gsap.set('.node-wrapper', { opacity: 0.35, scale: 0.85 });
       gsap.set('.node-wrapper:first-child', { opacity: 1, scale: 1.15 });
@@ -200,6 +178,11 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           start: 'top top',
           end: 'bottom bottom',
           scrub: 0.5,
+          onUpdate: (self) => {
+            const rawStep = Math.round(self.progress * (totalItems - 1));
+            const step = Math.min(Math.max(rawStep, 0), totalItems - 1);
+            setActiveZone((prev: number) => (prev !== step ? step : prev));
+          },
         },
       });
 
@@ -245,7 +228,7 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           label
         );
 
-        // F. Active Node Highlight & Glowing Color Transition
+        // F. Active Node Highlight Transition
         tl.to(
           `.node-wrapper:nth-child(${i + 1})`,
           { opacity: 0.35, scale: 0.85, ease: 'none' },
@@ -254,30 +237,6 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
         tl.to(
           `.node-wrapper:nth-child(${i + 2})`,
           { opacity: 1, scale: 1.15, ease: 'none' },
-          label
-        );
-
-        // Dynamic Red / Blue Glowing Color Animation for Active Node Icon
-        tl.to(
-          `.node-wrapper:nth-child(${i + 1}) .wheel-icon-target`,
-          {
-            borderColor: inactiveBorder,
-            backgroundColor: inactiveBg,
-            color: '#71717a',
-            boxShadow: inactiveShadow,
-            ease: 'none',
-          },
-          label
-        );
-        tl.to(
-          `.node-wrapper:nth-child(${i + 2}) .wheel-icon-target`,
-          {
-            borderColor: activeBorder,
-            backgroundColor: activeBg,
-            color: '#ffffff',
-            boxShadow: activeShadow,
-            ease: 'none',
-          },
           label
         );
 
@@ -293,10 +252,22 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
           label
         );
         // Refresh ScrollTrigger to calculate accurate layout metrics
+        // G. Background Watermark Parallax Transition
+        tl.to(
+          `.watermark-text:nth-child(${i + 1})`,
+          { opacity: 0, scale: 1.1, ease: 'none' },
+          label
+        );
+        tl.to(
+          `.watermark-text:nth-child(${i + 2})`,
+          { opacity: 0.03, scale: 1, ease: 'none' },
+          label
+        );
+        // Refresh ScrollTrigger to calculate accurate layout metrics
         ScrollTrigger.refresh();
       }
     },
-    { scope: containerRef }
+    { scope: containerRef, dependencies: [theme] }
   );
 
   return (
@@ -416,19 +387,41 @@ export default function SkillsWheel({ theme }: SkillsWheelProps) {
               {SKILL_ZONES.map((zone, i) => {
                 const rotation = i * (360 / SKILL_ZONES.length);
                 const ZoneIcon = zone.icon;
+                const isActive = i === activeZone;
 
                 return (
                   <div
                     key={`node-${zone.id}`}
-                    className="node-wrapper absolute top-1/2 left-1/2 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 -mt-5 -ml-5 sm:-mt-7 sm:-ml-7 md:-mt-8 md:-ml-8 will-change-transform will-change-opacity cursor-pointer pointer-events-auto"
+                    onClick={() => {
+                      const container = containerRef.current;
+                      if (container) {
+                        const targetY = container.offsetTop + (i / (SKILL_ZONES.length - 1)) * (container.offsetHeight - window.innerHeight);
+                        window.scrollTo({ top: targetY, behavior: 'smooth' });
+                      }
+                    }}
+                    className={`node-wrapper absolute top-1/2 left-1/2 w-10 h-10 sm:w-14 sm:h-14 md:w-16 md:h-16 -mt-5 -ml-5 sm:-mt-7 sm:-ml-7 md:-mt-8 md:-ml-8 cursor-pointer pointer-events-auto transition-all duration-300 ${
+                      isActive ? 'opacity-100 scale-110 z-30' : 'opacity-40 scale-90 z-10'
+                    }`}
                     style={{
                       transform: `rotate(${rotation}deg) translateX(calc(-1 * var(--ring-radius, 105px))) rotate(${-rotation}deg)`,
                     }}
                   >
                     <div
-                      className="wheel-icon wheel-icon-target w-full h-full rounded-full border flex items-center justify-center transition-all duration-300 shadow-lg"
+                      className={`wheel-icon w-full h-full rounded-full border flex items-center justify-center transition-all duration-300 ${
+                        isActive
+                          ? isRed
+                            ? 'border-red-500 bg-red-500/25 text-white shadow-[0_0_25px_rgba(239,68,68,0.85)] ring-2 ring-red-500/50'
+                            : 'border-blue-500 bg-blue-600/25 text-white shadow-[0_0_25px_rgba(59,130,246,0.85)] ring-2 ring-blue-500/50'
+                          : 'border-zinc-800 bg-zinc-950 text-zinc-500 hover:border-zinc-600'
+                      }`}
                     >
-                      <ZoneIcon className="w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6 text-current stroke-[2.2] transition-all duration-300" />
+                      <ZoneIcon
+                        className={`w-4 h-4 sm:w-5 sm:h-5 md:h-6 md:w-6 stroke-[2.2] transition-colors duration-300 ${
+                          isActive
+                            ? 'text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]'
+                            : 'text-zinc-500'
+                        }`}
+                      />
                     </div>
                   </div>
                 );
