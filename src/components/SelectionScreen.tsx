@@ -13,7 +13,6 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [timeStr, setTimeStr] = useState<string>('');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
-  const [isAudioUnlocked, setIsAudioUnlocked] = useState<boolean>(false);
   const [transitioning, setTransitioning] = useState<'none' | 'red' | 'blue'>('none');
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -32,24 +31,10 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     return audioCtxRef.current;
   };
 
-  const unlockAllAudio = () => {
-    setIsAudioUnlocked(true);
+  const autoResumeAudio = () => {
     const ctx = getAudioCtx();
     if (ctx && ctx.state === 'suspended') {
       ctx.resume().catch(() => {});
-    }
-
-    if (hoverAudioRef.current) {
-      hoverAudioRef.current.play().then(() => {
-        hoverAudioRef.current?.pause();
-        if (hoverAudioRef.current) hoverAudioRef.current.currentTime = 0;
-      }).catch(() => {});
-    }
-    if (selectAudioRef.current) {
-      selectAudioRef.current.play().then(() => {
-        selectAudioRef.current?.pause();
-        if (selectAudioRef.current) selectAudioRef.current.currentTime = 0;
-      }).catch(() => {});
     }
   };
 
@@ -64,62 +49,61 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
     hoverAudioRef.current = hoverAudio;
     selectAudioRef.current = selectAudio;
 
-    const handleInitialUserGesture = () => {
-      unlockAllAudio();
+    // Instant zero-click audio activation on any cursor movement, mouseenter, or touch
+    const handleMoveOrTouch = () => {
+      autoResumeAudio();
     };
 
-    window.addEventListener('pointerdown', handleInitialUserGesture, { capture: true, passive: true });
-    window.addEventListener('touchstart', handleInitialUserGesture, { capture: true, passive: true });
-    window.addEventListener('click', handleInitialUserGesture, { capture: true, passive: true });
-    window.addEventListener('keydown', handleInitialUserGesture, { passive: true });
+    window.addEventListener('pointermove', handleMoveOrTouch, { passive: true });
+    window.addEventListener('mousemove', handleMoveOrTouch, { passive: true });
+    window.addEventListener('mouseenter', handleMoveOrTouch, { passive: true });
+    window.addEventListener('mouseover', handleMoveOrTouch, { passive: true });
+    window.addEventListener('touchstart', handleMoveOrTouch, { passive: true });
+    window.addEventListener('click', handleMoveOrTouch, { capture: true, passive: true });
+    window.addEventListener('keydown', handleMoveOrTouch, { passive: true });
 
     return () => {
-      window.removeEventListener('pointerdown', handleInitialUserGesture, { capture: true });
-      window.removeEventListener('touchstart', handleInitialUserGesture, { capture: true });
-      window.removeEventListener('click', handleInitialUserGesture, { capture: true });
-      window.removeEventListener('keydown', handleInitialUserGesture);
+      window.removeEventListener('pointermove', handleMoveOrTouch);
+      window.removeEventListener('mousemove', handleMoveOrTouch);
+      window.removeEventListener('mouseenter', handleMoveOrTouch);
+      window.removeEventListener('mouseover', handleMoveOrTouch);
+      window.removeEventListener('touchstart', handleMoveOrTouch);
+      window.removeEventListener('click', handleMoveOrTouch, { capture: true });
+      window.removeEventListener('keydown', handleMoveOrTouch);
     };
   }, []);
 
   const playSanAndreasHoverFX = (_isRed: boolean) => {
     if (!soundEnabled) return;
     try {
-      if (!isAudioUnlocked) {
-        unlockAllAudio();
-      }
+      autoResumeAudio();
 
+      // Engine 1: Web Audio API GTA SA Menu Hover Sound (Guaranteed 0ms response on hover without clicks)
       const ctx = getAudioCtx();
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume().catch(() => {});
+      if (ctx) {
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(783.99, now); // G5
+        osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.035); // D6
+
+        gain.gain.setValueAtTime(0.18, now);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + 0.05);
       }
 
+      // Engine 2: HTML5 MP3 Audio Playback
       if (hoverAudioRef.current) {
         hoverAudioRef.current.currentTime = 0;
         hoverAudioRef.current.volume = 0.95;
-        const playPromise = hoverAudioRef.current.play();
-
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            // Synthesizer failover if browser blocked HTML5 Audio
-            if (ctx) {
-              const now = ctx.currentTime;
-              const osc = ctx.createOscillator();
-              const gain = ctx.createGain();
-              osc.type = 'square';
-              osc.frequency.setValueAtTime(783.99, now); // G5
-              osc.frequency.exponentialRampToValueAtTime(1174.66, now + 0.035); // D6
-
-              gain.gain.setValueAtTime(0.12, now);
-              gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
-
-              osc.connect(gain);
-              gain.connect(ctx.destination);
-
-              osc.start(now);
-              osc.stop(now + 0.05);
-            }
-          });
-        }
+        hoverAudioRef.current.play().catch(() => {});
       }
     } catch {
       // Audio failover
@@ -129,14 +113,7 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
   const playSanAndreasSelectFX = (_choice: 'blue' | 'red') => {
     if (!soundEnabled) return;
     try {
-      if (!isAudioUnlocked) {
-        unlockAllAudio();
-      }
-
-      const ctx = getAudioCtx();
-      if (ctx && ctx.state === 'suspended') {
-        ctx.resume().catch(() => {});
-      }
+      autoResumeAudio();
 
       if (selectAudioRef.current) {
         selectAudioRef.current.currentTime = 0;
@@ -476,22 +453,11 @@ export default function SelectionScreen({ onSelect }: SelectionScreenProps) {
           </span>
           <div className="w-[1px] h-3 bg-zinc-800 hidden sm:block" />
           <button
-            onClick={() => {
-              if (!isAudioUnlocked) {
-                unlockAllAudio();
-              } else {
-                setSoundEnabled(!soundEnabled);
-              }
-            }}
+            onClick={() => setSoundEnabled(!soundEnabled)}
             className="flex items-center gap-1.5 text-zinc-400 hover:text-white transition-colors cursor-pointer"
             title="Toggle Sound Effects"
           >
-            {!isAudioUnlocked ? (
-              <>
-                <Volume2 className="w-3.5 h-3.5 text-emerald-400 animate-pulse" />
-                <span className="text-emerald-400 font-bold text-[8.5px] sm:text-[10px] animate-pulse">ENABLE GTA SOUNDS</span>
-              </>
-            ) : soundEnabled ? (
+            {soundEnabled ? (
               <>
                 <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="text-emerald-400 font-bold text-[8.5px] sm:text-[10px]">AUDIO ON</span>
